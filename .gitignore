@@ -399,3 +399,10 @@ FodyWeavers.xsd
 
 # Ignore macOS system files
 .DS_Store
+
+
+obj/HPO25.csproj.nuget.dgspec.json
+obj/HPO25.csproj.nuget.g.props
+obj/HPO25.csproj.nuget.g.targets
+obj/project.assets.json
+obj/project.nuget.cache
