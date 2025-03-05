@@ -1426,19 +1426,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Bartek\\.nuget\\packages\\": {}
+    "/Users/janferchof/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Bartek\\Music\\SemesterProject25\\HPO25\\HPO25.csproj",
+      "projectUniqueName": "/Users/janferchof/Documents/GitHub/SemesterProject25/HPO25/HPO25.csproj",
       "projectName": "HPO25",
-      "projectPath": "C:\\Users\\Bartek\\Music\\SemesterProject25\\HPO25\\HPO25.csproj",
-      "packagesPath": "C:\\Users\\Bartek\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Bartek\\Music\\SemesterProject25\\HPO25\\obj\\",
+      "projectPath": "/Users/janferchof/Documents/GitHub/SemesterProject25/HPO25/HPO25.csproj",
+      "packagesPath": "/Users/janferchof/.nuget/packages/",
+      "outputPath": "/Users/janferchof/Documents/GitHub/SemesterProject25/HPO25/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Bartek\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/Users/janferchof/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -1505,7 +1505,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100-rc.2.24474.11/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.100-rc.1.24452.12/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
