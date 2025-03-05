@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HPO")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b37ca72d03f065697e18a01da0a073ce1d5eeed4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7128ead435763d9603afeb5ccfa78a4f48d1c5bf")]
 [assembly: System.Reflection.AssemblyProductAttribute("HPO")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HPO")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
