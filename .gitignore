@@ -507,3 +507,49 @@ obj/
 
 # Avalonia specific
 **/Properties/launchSettings.json
+
+# Extra extra
+# Ignore build and runtime artifacts
+bin/
+obj/
+
+# Visual Studio files
+.vs/
+*.suo
+*.user
+*.sln.docstates
+
+# Rider files
+.idea/
+
+# Nuget package files
+*.nupkg
+
+# Specific project artifact exclusions
+**/obj/*.json
+**/obj/*.props
+**/obj/*.targets
+**/obj/project.assets.json
+**/obj/project.nuget.cache
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+[Xx]64/
+[Xx]86/
+
+# Visual Studio cache files
+ipch/
+*.aps
+*.ncb
+*.opendb
+*.opensdf
+*.sdf
+*.cachefile
+*.VC.db
+*.VC.VC.opendb
