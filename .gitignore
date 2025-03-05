@@ -482,3 +482,28 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+#extra adding
+# Ignore build outputs
+bin/
+obj/
+
+# Ignore Visual Studio/Rider files
+.vs/
+.vscode/
+.idea/
+
+# Specific file types
+*.suo
+*.user
+*.userprefs
+*.sln.docstates
+
+# Specific JSON and PROP exclusions
+*.json
+!package.json
+!project.json
+*.prop
+
+# Avalonia specific
+**/Properties/launchSettings.json
