@@ -489,5 +489,6 @@ $RECYCLE.BIN/
 
 
 *.dll
-HPO/obj/
-HPO/bin/
+obj/
+bin/
+
