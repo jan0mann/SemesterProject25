@@ -17,15 +17,15 @@
     <StackPanel Background="#D9D9D9">
         <Grid RowDefinitions="*" ColumnDefinitions="*,*,*">
             <TextBlock Text="Heat Production Optimization" FontSize="24" Margin="20" FontWeight="Bold" Foreground="#1A1A40" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center"/>
-            <ToggleSplitButton Content = "Menu" Foreground="White" Background="#1A1A40" Margin="20" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="50">
-                <ToggleSplitButton.Flyout>
+            <SplitButton Content = "Menu" Foreground="White" Background="#1A1A40" Margin="20" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="50">
+                <SplitButton.Flyout>
                     <MenuFlyout Placement = "Bottom">
                         <MenuItem Header="File" InputGesture="Ctrl + A"/>
                         <MenuItem Header="View Boiler Information"/>
                         <MenuItem Header="Edit"/>                
                     </MenuFlyout>
-                </ToggleSplitButton.Flyout>    
-            </ToggleSplitButton>
+                </SplitButton.Flyout>    
+            </SplitButton>
         </Grid>
         <Grid RowDefinitions="Auto,*,Auto,Auto" ColumnDefinitions="*,*">
             <TextBlock Text="Welcome" Foreground="#1A1A40" Grid.Row="0" FontWeight="Bold" Grid.Column="0" HorizontalAlignment="Center"/>
