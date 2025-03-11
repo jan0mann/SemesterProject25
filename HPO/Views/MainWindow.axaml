@@ -28,7 +28,20 @@
             </Button>
         </Grid>
         <Grid RowDefinitions="Auto,*,Auto,Auto" ColumnDefinitions="*,*">
-            <TextBlock Text="Welcome" Foreground="#1A1A40" Grid.Row="0" FontWeight="Bold" Grid.Column="0" HorizontalAlignment="Center"/>
+            <TextBlock Text="Chooste dates and times:" Foreground="#1A1A40" FontWeight="Bold" HorizontalAlignment="Center"/>
+            <Grid Grid.Row="0" Grid.Column="0" RowDefinitions="*,*,*,*,*,*" ColumnDefinitions="20*,80*">
+                
+                <TextBlock Text="Start @:" Foreground="#1A1A40" Grid.Row="1" Grid.Column="0" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <DatePicker Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10"/>
+                <TimePicker Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10"/>
+                <TextBlock Text="End @:" Foreground="#1A1A40" Grid.Row="3" Grid.Column="0" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <DatePicker Grid.Row="3" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10"/>
+                <TimePicker Grid.Row="4" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10"/>
+                <Grid Grid.Row="5" Grid.Column="2" RowDefinitions="*" ColumnDefinitions="*,*,*">
+                    <Button Grid.Column="1" HorizontalAlignment="Left">Calculate</Button>
+                    <Button Grid.Column="2" HorizontalAlignment="Right">Save</Button>
+                </Grid>
+            </Grid>
             <Image Source="/Assets/image.png" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20"/>
         </Grid>
     </StackPanel>
