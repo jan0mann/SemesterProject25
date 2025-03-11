@@ -489,6 +489,6 @@ $RECYCLE.BIN/
 
 
 *.dll
-obj/
-bin/
+obj
+bin
 
