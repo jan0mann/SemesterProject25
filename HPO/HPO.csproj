@@ -7,7 +7,11 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
-
+  <Target Name="OnlyMacOSPostBuildChangeIcon" AfterTargets="PostBuildEvent">
+      <Exec Command="chmod +x  $(ProjectDir)changeIcon.command" Condition="'$(OS)' == 'Unix' Or '$(OS)' == 'Darwin' " />
+      <Exec Command="$(ProjectDir)changeIcon.command  $(ProjectDir)" Condition=" '$(OS)' == 'Unix' Or '$(OS)' == 'Darwin' " />
+      <!--<Message Importance="High" Text="The Icon of the app is changed now!" />-->
+    </Target>
   <ItemGroup>
     <Folder Include="Models\" />
     <AvaloniaResource Include="Assets\**" />
@@ -25,4 +29,7 @@
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
   </ItemGroup>
+
+
+  
 </Project>
