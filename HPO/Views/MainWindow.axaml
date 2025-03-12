@@ -3,7 +3,7 @@
         xmlns:vm="using:HPO.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="750"
+        mc:Ignorable="d" d:DesignWidth="1800" d:DesignHeight="1200"
         x:Class="HPO.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
@@ -17,7 +17,7 @@
     <StackPanel Background="#D9D9D9">
         <Grid RowDefinitions="*" ColumnDefinitions="*,*,*">
             <TextBlock Text="Heat Production Optimization" FontSize="34" Margin="30" FontWeight="Light" Foreground="#4682B4" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center"/>
-            <Button Content = "&#x2630;" Margin="10" Foreground="#D9D9D9" Background="#4682B4" Grid.Row="0" Grid.Column="0" FontSize="32" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" Height="50" Width="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+            <Button Content = "&#x2630;" Margin="20" Padding="-10" Foreground="#D9D9D9" Background="#4682B4" Grid.Row="0" Grid.Column="0" FontSize="32" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" Height="40" Width="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                 <Button.Flyout>
                     <MenuFlyout Placement = "Bottom">
                         <MenuItem  Header="File" InputGesture="Ctrl + A"/>
@@ -25,7 +25,8 @@
                         <MenuItem Header="Edit"/>                
                     </MenuFlyout>
                 </Button.Flyout>    
-            </Button>
+            </Button> 
+          
         </Grid>
         <Grid RowDefinitions="Auto,*,Auto,Auto" ColumnDefinitions="*,*">
             <TextBlock Text="Chooste dates and times:" Foreground="#1A1A40" FontWeight="Bold" HorizontalAlignment="Center"/>
