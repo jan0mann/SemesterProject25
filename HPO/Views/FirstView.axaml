@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:HPO.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1800" d:DesignHeight="1200"
+             x:DataType="vm:FirstViewModel"
+             x:Class="HPO.Views.FirstView">
+            
+     <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+    <StackPanel Background="#D9D9D9">
+     <Grid RowDefinitions="*" ColumnDefinitions="*,*,*">
+            <TextBlock Text="Heat Production Optimization" FontSize="34" Margin="30" FontWeight="Light" Foreground="#4682B4" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center"/>
+    </Grid>  
+        <Grid RowDefinitions="Auto,*,Auto,Auto" ColumnDefinitions="*,*">
+            <TextBlock Text="Chooste dates and times:" Foreground="#1A1A40" FontWeight="Bold" HorizontalAlignment="Center"/>
+            <Grid Grid.Row="0" Grid.Column="0" RowDefinitions="*,*,*,*,*,*" ColumnDefinitions="20*,80*">
+                
+                <TextBlock Text="Start @:" Foreground="#1A1A40" Grid.Row="1" Grid.Column="0" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <DatePicker Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10"/>
+                <TimePicker Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10"/>
+                <TextBlock Text="End @:" Foreground="#1A1A40" Grid.Row="3" Grid.Column="0" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <DatePicker Grid.Row="3" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10"/>
+                <TimePicker Grid.Row="4" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10"/>
+                <Grid Grid.Row="5" Grid.Column="2" RowDefinitions="*" ColumnDefinitions="*,*,*">
+                    <Button Grid.Column="1" HorizontalAlignment="Left">Calculate</Button>
+                    <Button Grid.Column="2" HorizontalAlignment="Right">Save</Button>
+                </Grid>
+            </Grid>
+            <Image Source="/Assets/image.png" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20"/>
+        </Grid>
+    </StackPanel>
+            
+</UserControl>
