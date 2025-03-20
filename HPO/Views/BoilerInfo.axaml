@@ -6,7 +6,53 @@
              mc:Ignorable="d" d:DesignWidth="1800" d:DesignHeight="1200"
              x:DataType="vm:BoilerInfoViewModel"
              x:Class="HPO.Views.BoilerInfo">
-            <StackPanel>
-                <TextBlock Text="{Binding SecondViewText}"/>
-            </StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- Menu goes here -->
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="2">
+            <!-- Add menu content here -->
+        </StackPanel>
+        
+        <!-- Gas Boiler info list -->
+        <StackPanel Grid.Row="1" Grid.Column="0">
+            <TextBlock Text="Gas Boilers" FontWeight="Bold" Margin="0,0,0,10"/>
+            <ListBox ItemsSource="{Binding GasBoilers}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Name}" Margin="0,0,10,0" HorizontalAlignment="Center" />
+                            <TextBlock Text="{Binding Heat, StringFormat='Heat: {0}'}" Margin="0,0,10,0" HorizontalAlignment="Center" />
+                            <TextBlock Text="{Binding ProdCost, StringFormat='ProdCost: {0}'}" Margin="0,0,10,0" HorizontalAlignment="Center" />
+                            <TextBlock Text="{Binding CO2Emission, StringFormat='CO2Emission: {0}'}" Margin="0,0,10,0" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+        
+        <!-- Oil Boiler info list -->
+        <StackPanel Grid.Row="1" Grid.Column="1">
+            <TextBlock Text="Oil Boilers" FontWeight="Bold" Margin="0,0,0,10"/>
+            <ListBox ItemsSource="{Binding OilBoilers}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Name}" Margin="0,0,10,0" HorizontalAlignment="Center" />
+                            <TextBlock Text="{Binding Heat, StringFormat='Heat: {0}'}" Margin="0,0,10,0" HorizontalAlignment="Center" />
+                            <TextBlock Text="{Binding ProdCost, StringFormat='ProdCost: {0}'}" Margin="0,0,10,0" HorizontalAlignment="Center" />
+                            <TextBlock Text="{Binding CO2Emission, StringFormat='CO2Emission: {0}'}" Margin="0,0,10,0" HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+    </Grid>
 </UserControl>
