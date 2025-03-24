@@ -18,10 +18,12 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private FirstView _firstView = new FirstView { DataContext = new FirstViewModel() };
     private BoilerInfo _secondView = new BoilerInfo { DataContext = new BoilerInfoViewModel() };
+    private HeatDemand _thirdView = new HeatDemand { DataContext = new HeatDemandViewModel() };
 
     public MainWindowViewModel()
     {
         CurrentView = _firstView;
+        HeatDemandViewModel = new HeatDemandViewModel();
     }
 
     [RelayCommand]
@@ -35,4 +37,13 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         CurrentView = _secondView;
     }
+
+    [RelayCommand]
+    public void NavigateToHeatDemand()
+    {
+        CurrentView = _thirdView;
+    }
+
+    public HeatDemandViewModel HeatDemandViewModel { get; }
 }
+

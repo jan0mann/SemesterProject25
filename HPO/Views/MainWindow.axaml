@@ -7,7 +7,8 @@
         x:Class="HPO.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="HPO">
+        Title="HPO"
+        WindowState="Maximized">
 
  <Design.DataContext>
         <vm:MainWindowViewModel />
@@ -22,8 +23,9 @@
             <Button Content = "&#x2630;" Margin="20" Padding="-10" Foreground="#D9D9D9" Background="#4682B4" Grid.Row="0" Grid.Column="0" FontSize="32" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" Height="40" Width="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                 <Button.Flyout>
                     <MenuFlyout Placement = "Bottom">
-                        <MenuItem  Header="File" HorizontalAlignment="Stretch" Command="{Binding NavigateToFirstView}"/>
+                        <MenuItem  Header="Main Page" HorizontalAlignment="Stretch" Command="{Binding NavigateToFirstView}"/>
                         <MenuItem Header="View Boiler Information" HorizontalAlignment="Stretch" Command="{Binding NavigateToBoilerInfo}"/>
+                        <MenuItem Header="View Heat Demand" HorizontalAlignment="Stretch" Command="{Binding NavigateToHeatDemand}"/>
                         <MenuItem Header="Edit"/>                
                     </MenuFlyout>
                 </Button.Flyout>    
