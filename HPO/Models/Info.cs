@@ -8,27 +8,27 @@ public abstract class Information
 
     public double? HeatDemand { get; set;}
 
-    public double? HeatPrice { get; set;}
+    public double? Price { get; set;}
 
-    public Information(string? timeFrom, string? timeTo, double? heatDemand, double? heatPrice)
+    public Information(string? timeFrom, string? timeTo, double? heatDemand, double? price)
     {
         TimeFrom = timeFrom;
         TimeTo = timeTo;
         HeatDemand = heatDemand;
-        HeatPrice = heatPrice;
+        Price = price;
     }
 } 
 
 public class Winter : Information
 {
-    public Winter(string? timeFrom, string? timeTo, double? heatDemand, double? heatPrice)
-            : base(timeFrom, timeTo, heatDemand, heatPrice) { }
+    public Winter(string? WTimeFrom, string? WTimeTo, double? WHeatDemand, double? WPrice)
+            : base(WTimeFrom, WTimeTo, WHeatDemand, WPrice) { }
 }
 
 public class Summer : Information
 {
-    public Summer(string? timeFrom, string? timeTo, double? heatDemand, double? heatPrice)
-            : base(timeFrom, timeTo, heatDemand, heatPrice) { }
+    public Summer(string? STimeFrom, string? STimeTo, double? SHeatDemand, double? SPrice)
+            : base(STimeFrom, STimeTo, SHeatDemand, SPrice) { }
 }
 
 public class Starter
