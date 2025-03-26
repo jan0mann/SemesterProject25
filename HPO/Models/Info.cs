@@ -1,34 +1,41 @@
 namespace HPO.Models;
 
-public abstract class Information
+public class Winter
 {
-    public string? TimeFrom { get; set;}
+    public string? WTimeFrom { get; set;}
 
-    public string? TimeTo { get; set;}
+    public string? WTimeTo { get; set;}
 
-    public double? HeatDemand { get; set;}
+    public double? WHeatDemand { get; set;}
 
-    public double? Price { get; set;}
+    public double? WPrice { get; set;}
 
-    public Information(string? timeFrom, string? timeTo, double? heatDemand, double? price)
+    public Winter(string? timeFrom, string? timeTo, double? heatDemand, double? price)
     {
-        TimeFrom = timeFrom;
-        TimeTo = timeTo;
-        HeatDemand = heatDemand;
-        Price = price;
+        this.WTimeFrom = timeFrom;
+        this.WTimeTo = timeTo;
+        this.WHeatDemand = heatDemand;
+        this.WPrice = price;
     }
-} 
-
-public class Winter : Information
-{
-    public Winter(string? WTimeFrom, string? WTimeTo, double? WHeatDemand, double? WPrice)
-            : base(WTimeFrom, WTimeTo, WHeatDemand, WPrice) { }
 }
 
-public class Summer : Information
+public class Summer
 {
-    public Summer(string? STimeFrom, string? STimeTo, double? SHeatDemand, double? SPrice)
-            : base(STimeFrom, STimeTo, SHeatDemand, SPrice) { }
+   public string? STimeFrom { get; set;}
+
+    public string? STimeTo { get; set;}
+
+    public double? SHeatDemand { get; set;}
+
+    public double? SPrice { get; set;}
+
+    public Summer(string? timeFrom, string? timeTo, double? heatDemand, double? price)
+    {
+        this.STimeFrom = timeFrom;
+        this.STimeTo = timeTo;
+        this.SHeatDemand = heatDemand;
+        this.SPrice = price;
+    }
 }
 
 public class Starter
