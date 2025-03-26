@@ -19,7 +19,7 @@
         <StackPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center">    
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center">
-            <TextBlock Text="Gas Boilers" FontWeight="Bold" FontSize="22" Margin="0,0,0,20"/>
+            <TextBlock Text="Gas Boilers" Foreground="Black" FontWeight="Bold" FontSize="22" Margin="0,0,0,20"/>
             <ListBox ItemsSource="{Binding GasBoilers}" Width="800">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -30,14 +30,14 @@
                                 <TextBlock Text="{Binding Heat, StringFormat='Max heat: {0} MW'}" FontSize="14" Margin="0,0,0,10"/>
                                 <TextBlock Text="{Binding ProdCost, StringFormat='Production costs: {0} DKK / MWh(th)'}" FontSize="14" Margin="0,0,0,10"/>
                                 <TextBlock Text="{Binding CO2Emission, StringFormat='CO2 emissions: {0} kg / MWh(th)'}" FontSize="14" Margin="0,0,0,10"/>
-                                <TextBlock Text="{Binding GasConsumption, StringFormat='Gas consumption: {0} MWh(gas) / MWh(th)'}" FontSize="14" Margin="0,0,0,10"/>
+                                <TextBlock Text="{Binding Consumption, StringFormat='Gas consumption: {0} MWh(gas) / MWh(th)'}" FontSize="14" Margin="0,0,0,10"/>
                             </StackPanel>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
 
-            <TextBlock Text="Oil Boilers" FontWeight="Bold" FontSize="22" Margin="0,40,0,20"/>
+            <TextBlock Text="Oil Boilers" Foreground="Black" FontWeight="Bold" FontSize="22" Margin="0,40,0,20"/>
             <ListBox ItemsSource="{Binding OilBoilers}" Width="800">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -48,12 +48,13 @@
                                 <TextBlock Text="{Binding Heat, StringFormat='Max heat: {0} MW'}" FontSize="14" Margin="0,0,0,10"/>
                                 <TextBlock Text="{Binding ProdCost, StringFormat='Production costs: {0} DKK / MWh(th)'}" FontSize="14" Margin="0,0,0,10"/>
                                 <TextBlock Text="{Binding CO2Emission, StringFormat='CO2 emissions: {0} kg / MWh(th)'}" FontSize="14" Margin="0,0,0,10"/>
-                                <TextBlock Text="{Binding OilConsumption, StringFormat='Oil consumption: {0} MWh(oil) / MWh(th)'}" FontSize="14" Margin="0,0,0,10"/>
+                                <TextBlock Text="{Binding Consumption, StringFormat='Oil consumption: {0} MWh(oil) / MWh(th)'}" FontSize="14" Margin="0,0,0,10"/>
                             </StackPanel>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </StackPanel>
+        
     </Grid>
 </UserControl>

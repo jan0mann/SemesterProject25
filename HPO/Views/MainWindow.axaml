@@ -25,8 +25,7 @@
                     <MenuFlyout Placement = "Bottom">
                         <MenuItem  Header="Main Page" HorizontalAlignment="Stretch" Command="{Binding NavigateToFirstView}"/>
                         <MenuItem Header="View Boiler Information" HorizontalAlignment="Stretch" Command="{Binding NavigateToBoilerInfo}"/>
-                        <MenuItem Header="View Heat Demand" HorizontalAlignment="Stretch" Command="{Binding NavigateToHeatDemand}"/>
-                        <MenuItem Header="Edit"/>                
+                        <MenuItem Header="View Heat Demand" HorizontalAlignment="Stretch" Command="{Binding NavigateToHeatDemand}"/>              
                     </MenuFlyout>
                 </Button.Flyout>    
             </Button> 
