@@ -25,8 +25,8 @@ public void ReadInfo()
         foreach (var winter in winterList)
         {
 
-            Console.WriteLine(winter.TimeFrom);
-            System.Diagnostics.Debug.WriteLine(winter.TimeFrom);
+            Console.WriteLine(winter.WTimeFrom);
+            
 
 
         }
