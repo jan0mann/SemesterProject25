@@ -6,11 +6,15 @@ public class Winter
 
     public string? WTimeTo { get; set;}
 
-    public double? WHeatDemand { get; set;}
+    public double WHeatDemand
+{
+    get => WHeatDemand;
+    set => WHeatDemand = value == 0 ? 0 : value; 
+}
 
     public double? WPrice { get; set;}
 
-    public Winter(string? timeFrom, string? timeTo, double? heatDemand, double? price)
+    public Winter(string? timeFrom, string? timeTo, double heatDemand, double? price)
     {
         this.WTimeFrom = timeFrom;
         this.WTimeTo = timeTo;
@@ -25,11 +29,11 @@ public class Summer
 
     public string? STimeTo { get; set;}
 
-    public double? SHeatDemand { get; set;}
+    public double SHeatDemand { get; set;}
 
     public double? SPrice { get; set;}
 
-    public Summer(string? timeFrom, string? timeTo, double? heatDemand, double? price)
+    public Summer(string? timeFrom, string? timeTo, double heatDemand, double? price)
     {
         this.STimeFrom = timeFrom;
         this.STimeTo = timeTo;

@@ -9,6 +9,7 @@
              xmlns:local="using:AvaloniaSample"
              xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              xmlns:vms="using:HPO.ViewModels">
+             
   <UserControl.DataContext>
     <vms:HeatDemandViewModel/>
   </UserControl.DataContext>
@@ -17,8 +18,21 @@
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
     
-    <StackPanel Grid.Row="0" Margin ="10">
-       <DatePicker Margin="10" HorizontalAlignment="Center"/>
+    <StackPanel Margin="20">
+        <TextBlock Text="Select Date:" FontSize="16"/>
+        <DatePicker SelectedDate="{Binding SelectedDate}"/>
+
+        <TextBlock Text="Select Time:" FontSize="16" Margin="0,10,0,0"/>
+        <TimePicker SelectedTime="{Binding SelectedTime}"/>
+
+        <TextBlock Text="Predefined DateTimes:" FontSize="16" Margin="0,10,0,0"/>
+        <ComboBox ItemsSource="{Binding PredefinedDateTimes}" 
+          SelectedItem="{Binding SelectedDateTime}" 
+          Width="200"/>
+        
+        <TextBlock Text="Selected DateTime:" FontSize="16" Margin="0,10,0,0"/>
+        <TextBlock Text="{Binding SelectedDateTime, StringFormat='MM-dd-yyyy HH:mm'}"
+                   FontSize="14" FontWeight="Bold"/>
     </StackPanel>
     <lvc:CartesianChart Grid.Row="1" Series="{Binding Series}" YAxes = "{Binding YAxes}" Height="600"></lvc:CartesianChart>
   </Grid>  
