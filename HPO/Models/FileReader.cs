@@ -6,6 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System;
+using Tmds.DBus.Protocol;
 
 namespace HPO.Models;
 
@@ -13,22 +14,19 @@ public class FileReader
 {
 public void ReadInfo()
     {
-        List<Winter> winterList = new();
+        List<Winter> winterList = WriteList<Winter>();
+        List<Summer> summerList = WriteList<Summer>();
+    }
+
+    public List<T> WriteList<T>()
+    {
         using (var reader = new StreamReader("HPOInfo.csv"))
         using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
         {
-            winterList = csv.GetRecords<Winter>().ToList();
-        }
-
-
-
-        foreach (var winter in winterList)
-        {
-
-            Console.WriteLine(winter.WTimeFrom);
+            return csv.GetRecords<T>().ToList();
             
-
-
         }
     }
+
+
 }
