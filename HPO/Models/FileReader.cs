@@ -11,12 +11,16 @@ using Tmds.DBus.Protocol;
 namespace HPO.Models;
 
 public class FileReader
-{
+{   
+    public List<Winter>? winterList;
+    public List<Summer>? summerList;
+
 public void ReadInfo()
     {
-        List<Winter> winterList = WriteList<Winter>();
-        List<Summer> summerList = WriteList<Summer>();
+        winterList = WriteList<Winter>();
+        summerList = WriteList<Summer>();
     }
+
 
     public List<T> WriteList<T>()
     {
