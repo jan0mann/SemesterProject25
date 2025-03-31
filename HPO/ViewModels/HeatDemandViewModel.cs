@@ -22,7 +22,7 @@ public partial class HeatDemandViewModel : ViewModelBase
         {
             if (SetProperty(ref _selectedDay, value))
             {
-                UpdateGraphForSelectedDay();
+                UpdateGraph();
             }
         }
     }
@@ -43,17 +43,17 @@ public partial class HeatDemandViewModel : ViewModelBase
 
     public HeatDemandViewModel()
     {
-        Days = new ObservableCollection<int>(Enumerable.Range(1, 14)); // Days 1 to 14
+        Days = new ObservableCollection<int>(Enumerable.Range(1, 14));
         _dailyHeatDemandData = new Dictionary<int, List<double>>();
         LoadHeatDemandData();
-        SelectedDay = 1; // Default to the first day
+        SelectedDay = 1;
     }
 
     private void LoadHeatDemandData()
     {
         using (var reader = new StreamReader(CsvFilePath))
         {
-            // Skip the header line
+
             reader.ReadLine();
 
             while (!reader.EndOfStream)
@@ -65,7 +65,7 @@ public partial class HeatDemandViewModel : ViewModelBase
                     DateTime.TryParse(values[0], CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date) &&
                     double.TryParse(values[2], NumberStyles.Any, CultureInfo.InvariantCulture, out double demand))
                 {
-                    int day = date.Day; // Extract the day from the date
+                    int day = date.Day;
 
                     if (!_dailyHeatDemandData.ContainsKey(day))
                     {
@@ -77,10 +77,10 @@ public partial class HeatDemandViewModel : ViewModelBase
             }
         }
 
-        UpdateGraphForSelectedDay(); // Initialize the graph with the first day's data
+        UpdateGraph();
     }
 
-    private void UpdateGraphForSelectedDay()
+    private void UpdateGraph()
     {
         if (_dailyHeatDemandData.TryGetValue(SelectedDay, out var heatDemandData))
         {
@@ -95,7 +95,7 @@ public partial class HeatDemandViewModel : ViewModelBase
                 }
             };
 
-            OnPropertyChanged(nameof(Series)); // Notify the UI to update the graph
+            OnPropertyChanged(nameof(Series));
         }
     }
 }
