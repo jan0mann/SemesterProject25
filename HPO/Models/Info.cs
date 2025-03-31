@@ -3,8 +3,9 @@ namespace HPO.Models;
 public class Winter
 {
     public string? WTimeFrom { get; set;}
-
+    public string? WHourFrom { get; set;}
     public string? WTimeTo { get; set;}
+    public string? WHourTo { get; set;}
 
     public double WHeatDemand
 {
@@ -26,8 +27,9 @@ public class Winter
 public class Summer
 {
    public string? STimeFrom { get; set;}
-
+   public string? SHourFrom { get; set;}
     public string? STimeTo { get; set;}
+    public string? SHourTo { get; set;}
 
     public double SHeatDemand { get; set;}
 
