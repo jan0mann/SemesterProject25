@@ -5,4 +5,4 @@ Group members: Serafeim Karalis, Bartosz Jaworski, Noah Fabian Bokelmann, Mikola
 
 Group supervisor: Dominik Wojciech Bosy
 
-The **Heat Production Optimization** project focuses on optimizing the scheduling of heat production units in a district heating network to minimize costs and improve efficiency. It integrates various components, including data management, optimization algorithms, and data visualization, to analyze heat demand and electricity prices for cost-effective operation. The project aims to develop a functional system that allows users to evaluate different production strategies and make informed decisions based on a dataset.
+The **Heat Production Optimization** project is about calculating boiler distribution depending on different head demand in two scenarios (summer/winter). It aims to minimize costs for the heat production and works with an optimizer to do so. Regarding the architecture, an Asset Manager is created to store all necessary information about the boiler. The data, managed through the Source Data Manager, imports the data as a CSV file into the program and uses the CSV helper library to do so.
