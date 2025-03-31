@@ -27,7 +27,7 @@ public partial class HeatDemandViewModel : ViewModelBase
         }
     }
 
-    private const string CsvFilePath = "Assets/HeatDemand.csv";
+    private const string CsvFilePath = "Assets/HPOInfo.csv"; // Updated file path
     public ISeries[] Series { get; set; }
 
     public Axis[] YAxes { get; set; }
@@ -53,17 +53,17 @@ public partial class HeatDemandViewModel : ViewModelBase
     {
         using (var reader = new StreamReader(CsvFilePath))
         {
-
-            reader.ReadLine();
+            var header = reader.ReadLine(); // Skip the header row
 
             while (!reader.EndOfStream)
             {
                 var line = reader.ReadLine();
                 var values = line.Split(',');
 
-                if (values.Length >= 3 &&
+                // Assuming WTimeFrom is the date and WHeatDemand is the heat demand
+                if (values.Length >= 5 &&
                     DateTime.TryParse(values[0], CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date) &&
-                    double.TryParse(values[2], NumberStyles.Any, CultureInfo.InvariantCulture, out double demand))
+                    double.TryParse(values[4], NumberStyles.Any, CultureInfo.InvariantCulture, out double heatDemand))
                 {
                     int day = date.Day;
 
@@ -72,7 +72,7 @@ public partial class HeatDemandViewModel : ViewModelBase
                         _dailyHeatDemandData[day] = new List<double>();
                     }
 
-                    _dailyHeatDemandData[day].Add(demand);
+                    _dailyHeatDemandData[day].Add(heatDemand);
                 }
             }
         }
@@ -99,5 +99,3 @@ public partial class HeatDemandViewModel : ViewModelBase
         }
     }
 }
-
-
