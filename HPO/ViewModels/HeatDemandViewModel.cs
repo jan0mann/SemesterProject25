@@ -33,7 +33,6 @@ public partial class HeatDemandViewModel : ViewModelBase
         var heatDemandData = new List<double>();
         using (var reader = new StreamReader(CsvFilePath))
         {
-            // Skip the header line
             reader.ReadLine();
             int lineCount = 0;
             while (!reader.EndOfStream && lineCount < 24)
