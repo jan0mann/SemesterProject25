@@ -11,9 +11,7 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
     <StackPanel Background="#D9D9D9">
-     <Grid RowDefinitions="*" ColumnDefinitions="*,*,*">
-            <TextBlock Text="Heat Production Optimization" FontSize="34" Margin="30" FontWeight="Light" Foreground="#4682B4" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center"/>
-    </Grid>  
+        <TextBlock Text="Heat Production Optimization" FontSize="34" Margin="30" FontWeight="Light" Foreground="#4682B4" HorizontalAlignment="Center"/>
         <Grid RowDefinitions="Auto,*,Auto,Auto" ColumnDefinitions="*,*">
             <TextBlock Text="Choose dates and times:" Foreground="#1A1A40" FontWeight="Bold" HorizontalAlignment="Left" Grid.Row="0" Grid.ColumnSpan="2" Margin="10"/>
             <Grid Grid.Row="1" Grid.Column="0" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="Auto,Auto">
