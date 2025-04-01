@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using HPO.Models;
 
 namespace HPO.ViewModels;
 
@@ -60,19 +61,19 @@ public partial class HeatDemandViewModel : ViewModelBase
                 var line = reader.ReadLine();
                 var values = line.Split(',');
 
-                // Assuming WTimeFrom is the date and WHeatDemand is the heat demand
+                // Parse Winter data (WTimeFrom and WHeatDemand)
                 if (values.Length >= 5 &&
-                    DateTime.TryParse(values[0], CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date) &&
-                    double.TryParse(values[4], NumberStyles.Any, CultureInfo.InvariantCulture, out double heatDemand))
+                    DateTime.TryParse(values[0], CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime wTimeFrom) &&
+                    double.TryParse(values[4], NumberStyles.Any, CultureInfo.InvariantCulture, out double wHeatDemand))
                 {
-                    int day = date.Day;
+                    int day = wTimeFrom.Day;
 
                     if (!_dailyHeatDemandData.ContainsKey(day))
                     {
                         _dailyHeatDemandData[day] = new List<double>();
                     }
 
-                    _dailyHeatDemandData[day].Add(heatDemand);
+                    _dailyHeatDemandData[day].Add(wHeatDemand);
                 }
             }
         }
