@@ -13,23 +13,38 @@ namespace HPO.ViewModels;
 
 public partial class HeatDemandViewModel : ViewModelBase
 {
-    public ObservableCollection<int> Days { get; }
+    public ObservableCollection<int> SummerDays { get; }
+    public ObservableCollection<int> WinterDays { get; }
 
-    private int _selectedDay;
-    public int SelectedDay
+    private int _selectedSummerDay;
+    public int SelectedSummerDay
     {
-        get => _selectedDay;
+        get => _selectedSummerDay;
         set
         {
-            if (SetProperty(ref _selectedDay, value))
+            if (SetProperty(ref _selectedSummerDay, value))
             {
-                UpdateGraph();
+                UpdateSummerGraph();
             }
         }
     }
 
-    private const string CsvFilePath = "Assets/HPOInfo.csv"; // Updated file path
-    public ISeries[] Series { get; set; }
+    private int _selectedWinterDay;
+    public int SelectedWinterDay
+    {
+        get => _selectedWinterDay;
+        set
+        {
+            if (SetProperty(ref _selectedWinterDay, value))
+            {
+                UpdateWinterGraph();
+            }
+        }
+    }
+
+    private const string CsvFilePath = "Assets/HPOInfo.csv"; 
+    public ISeries[] SummerSeries { get; set; }
+    public ISeries[] WinterSeries { get; set; }
 
     public Axis[] YAxes { get; set; }
         = new Axis[]
@@ -40,63 +55,121 @@ public partial class HeatDemandViewModel : ViewModelBase
             }
         };
 
-    private Dictionary<int, List<double>> _dailyHeatDemandData;
+    private Dictionary<int, List<double>> _winterHeatDemandData;
+    private Dictionary<int, List<double>> _summerHeatDemandData;
 
     public HeatDemandViewModel()
     {
-        Days = new ObservableCollection<int>(Enumerable.Range(1, 14));
-        _dailyHeatDemandData = new Dictionary<int, List<double>>();
-        LoadHeatDemandData();
-        SelectedDay = 1;
+        SummerDays = new ObservableCollection<int>(Enumerable.Range(11, 14));
+        WinterDays = new ObservableCollection<int>(Enumerable.Range(1, 14));
+        _winterHeatDemandData = new Dictionary<int, List<double>>();
+        _summerHeatDemandData = new Dictionary<int, List<double>>();
+        LoadWinterHeatDemandData();
+        LoadSummerHeatDemandData();
+        SelectedSummerDay = 11;
+        SelectedWinterDay = 1; 
     }
 
-    private void LoadHeatDemandData()
+    private void LoadWinterHeatDemandData()
     {
         using (var reader = new StreamReader(CsvFilePath))
         {
-            var header = reader.ReadLine(); // Skip the header row
+            var header = reader.ReadLine(); 
 
             while (!reader.EndOfStream)
             {
                 var line = reader.ReadLine();
                 var values = line.Split(',');
 
-                // Parse Winter data (WTimeFrom and WHeatDemand)
+                
                 if (values.Length >= 5 &&
                     DateTime.TryParse(values[0], CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime wTimeFrom) &&
                     double.TryParse(values[4], NumberStyles.Any, CultureInfo.InvariantCulture, out double wHeatDemand))
                 {
                     int day = wTimeFrom.Day;
 
-                    if (!_dailyHeatDemandData.ContainsKey(day))
+                    if (!_winterHeatDemandData.ContainsKey(day))
                     {
-                        _dailyHeatDemandData[day] = new List<double>();
+                        _winterHeatDemandData[day] = new List<double>();
                     }
 
-                    _dailyHeatDemandData[day].Add(wHeatDemand);
+                    _winterHeatDemandData[day].Add(wHeatDemand);
                 }
             }
         }
 
-        UpdateGraph();
+        UpdateWinterGraph();
+    }
+    private void LoadSummerHeatDemandData()
+    {
+        using (var reader = new StreamReader(CsvFilePath))
+        {
+            var header = reader.ReadLine(); 
+
+            while (!reader.EndOfStream)
+            {
+                var line = reader.ReadLine();
+                var values = line.Split(',');
+
+                
+                if (values.Length >= 11 &&
+                    DateTime.TryParse(values[6], CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime sTimeFrom) &&
+                    double.TryParse(values[10], NumberStyles.Any, CultureInfo.InvariantCulture, out double sHeatDemand))
+                {
+                    int day = sTimeFrom.Day;
+
+                    if (!_summerHeatDemandData.ContainsKey(day))
+                    {
+                        _summerHeatDemandData[day] = new List<double>();
+                    }
+
+                    _summerHeatDemandData[day].Add(sHeatDemand);
+                }
+            }
+        }
+
+        UpdateSummerGraph();
     }
 
-    private void UpdateGraph()
+    private void UpdateSummerGraph()
     {
-        if (_dailyHeatDemandData.TryGetValue(SelectedDay, out var heatDemandData))
+        if (_summerHeatDemandData.ContainsKey(SelectedSummerDay))
         {
-            Series = new ISeries[]
+            var heatDemandData = _summerHeatDemandData[SelectedSummerDay];
+
+            SummerSeries = new ISeries[]
             {
-                new LineSeries<double>
-                {
-                    Values = heatDemandData.ToArray(),
-                    Fill = null,
-                    GeometrySize = 0,
-                    LineSmoothness = 0
-                }
+            new LineSeries<double>
+            {
+                Values = heatDemandData.ToArray(),
+                Fill = null,
+                GeometrySize = 0,
+                LineSmoothness = 0
+            }
             };
 
-            OnPropertyChanged(nameof(Series));
+            OnPropertyChanged(nameof(SummerSeries));
+        }
+    }
+
+    private void UpdateWinterGraph()
+    {
+        if (_winterHeatDemandData.ContainsKey(SelectedWinterDay))
+        {
+            var heatDemandData = _winterHeatDemandData[SelectedWinterDay];
+
+            WinterSeries = new ISeries[]
+            {
+            new LineSeries<double>
+            {
+                Values = heatDemandData.ToArray(),
+                Fill = null,
+                GeometrySize = 0,
+                LineSmoothness = 0
+            }
+            };
+
+            OnPropertyChanged(nameof(WinterSeries));
         }
     }
 }
