@@ -6,7 +6,7 @@ namespace HPO.Models;
 public abstract class Boiler
 {
     public string Name { get; set; }
-    public float Heat { get; set; }
+    public float MaxHeat { get; set; }
     public float ProdCost { get; set; }
     public float CO2Emission { get; set; }
     public float Consumption { get; set; }
@@ -14,7 +14,7 @@ public abstract class Boiler
     public Boiler(string name, float maxHeat, float prodCost, float co2Emission, float consumption)
     {
         Name = name;
-        Heat = maxHeat;
+        MaxHeat = maxHeat;
         ProdCost = prodCost;
         CO2Emission = co2Emission;
         Consumption = consumption;
