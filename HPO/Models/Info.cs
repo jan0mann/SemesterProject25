@@ -2,9 +2,9 @@ namespace HPO.Models;
 
 public class Winter
 {
-    public string? WTimeFrom { get; set;}
+    public string? WDateFrom { get; set;}
     public string? WHourFrom { get; set;}
-    public string? WTimeTo { get; set;}
+    public string? WDateTo { get; set;}
     public string? WHourTo { get; set;}
 
     public double? WHeatDemand { get; set;}
@@ -13,8 +13,8 @@ public class Winter
 
     public Winter(string? timeFrom, string? timeTo, double? heatDemand, double? price)
     {
-        this.WTimeFrom = timeFrom;
-        this.WTimeTo = timeTo;
+        this.WDateFrom = timeFrom;
+        this.WDateTo = timeTo;
         this.WHeatDemand = heatDemand;
         this.WPrice = price;
     }
