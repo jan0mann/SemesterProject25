@@ -31,7 +31,6 @@ public class FileReader
 
     public Dictionary<int, List<double>> GetWinterHeatDemandData()
     {
-        // Use WriteList<Winter> to get the list of Winter objects
         var winterList = WriteList<Winter>();
 
         var winterHeatDemandData = new Dictionary<int, List<double>>();
@@ -57,7 +56,6 @@ public class FileReader
 
     public Dictionary<int, List<double>> GetSummerHeatDemandData()
     {
-        // Use WriteList<Summer> to get the list of Summer objects
         var summerList = WriteList<Summer>();
 
         var summerHeatDemandData = new Dictionary<int, List<double>>();
