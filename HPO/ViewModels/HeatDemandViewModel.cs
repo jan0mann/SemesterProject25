@@ -7,6 +7,8 @@ using System.Globalization;
 using System.Linq;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 using HPO.Models;
 
 namespace HPO.ViewModels;
@@ -42,7 +44,7 @@ public partial class HeatDemandViewModel : ViewModelBase
         }
     }
 
-    private const string CsvFilePath = "Assets/HPOInfo.csv"; 
+    private const string CsvFilePath = "Assets/HPOInfo.csv";
     public ISeries[] SummerSeries { get; set; }
     public ISeries[] WinterSeries { get; set; }
 
@@ -55,79 +57,42 @@ public partial class HeatDemandViewModel : ViewModelBase
             }
         };
 
+    public Axis[] XAxes { get; set; }
+        = new Axis[]
+        {
+            new Axis
+            {
+                Name = "Time",
+                Labels = GenerateTimeLabels(),
+                LabelsRotation = 45
+            }
+        };
+
+    private readonly FileReader _fileReader;
+
     private Dictionary<int, List<double>> _winterHeatDemandData;
     private Dictionary<int, List<double>> _summerHeatDemandData;
 
     public HeatDemandViewModel()
     {
+        _fileReader = new FileReader();
+
         SummerDays = new ObservableCollection<int>(Enumerable.Range(11, 14));
         WinterDays = new ObservableCollection<int>(Enumerable.Range(1, 14));
-        _winterHeatDemandData = new Dictionary<int, List<double>>();
-        _summerHeatDemandData = new Dictionary<int, List<double>>();
-        LoadWinterHeatDemandData();
-        LoadSummerHeatDemandData();
+
+        LoadHeatDemandData();
+
         SelectedSummerDay = 11;
-        SelectedWinterDay = 1; 
+        SelectedWinterDay = 1;
     }
 
-    private void LoadWinterHeatDemandData()
+    private void LoadHeatDemandData()
     {
-        using (var reader = new StreamReader(CsvFilePath))
-        {
-            var header = reader.ReadLine(); 
-
-            while (!reader.EndOfStream)
-            {
-                var line = reader.ReadLine();
-                var values = line.Split(',');
-
-                
-                if (values.Length >= 5 &&
-                    DateTime.TryParse(values[0], CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime wTimeFrom) &&
-                    double.TryParse(values[4], NumberStyles.Any, CultureInfo.InvariantCulture, out double wHeatDemand))
-                {
-                    int day = wTimeFrom.Day;
-
-                    if (!_winterHeatDemandData.ContainsKey(day))
-                    {
-                        _winterHeatDemandData[day] = new List<double>();
-                    }
-
-                    _winterHeatDemandData[day].Add(wHeatDemand);
-                }
-            }
-        }
+        // These methods now use LoadData<T> internally
+        _winterHeatDemandData = _fileReader.GetWinterHeatDemandData();
+        _summerHeatDemandData = _fileReader.GetSummerHeatDemandData();
 
         UpdateWinterGraph();
-    }
-    private void LoadSummerHeatDemandData()
-    {
-        using (var reader = new StreamReader(CsvFilePath))
-        {
-            var header = reader.ReadLine(); 
-
-            while (!reader.EndOfStream)
-            {
-                var line = reader.ReadLine();
-                var values = line.Split(',');
-
-                
-                if (values.Length >= 11 &&
-                    DateTime.TryParse(values[6], CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime sTimeFrom) &&
-                    double.TryParse(values[10], NumberStyles.Any, CultureInfo.InvariantCulture, out double sHeatDemand))
-                {
-                    int day = sTimeFrom.Day;
-
-                    if (!_summerHeatDemandData.ContainsKey(day))
-                    {
-                        _summerHeatDemandData[day] = new List<double>();
-                    }
-
-                    _summerHeatDemandData[day].Add(sHeatDemand);
-                }
-            }
-        }
-
         UpdateSummerGraph();
     }
 
@@ -139,13 +104,13 @@ public partial class HeatDemandViewModel : ViewModelBase
 
             SummerSeries = new ISeries[]
             {
-            new LineSeries<double>
-            {
-                Values = heatDemandData.ToArray(),
-                Fill = null,
-                GeometrySize = 0,
-                LineSmoothness = 0
-            }
+                new ColumnSeries<double>
+                {
+                    Values = heatDemandData.ToArray(),
+                    Padding = 0, // Defines the distance between bars
+                    MaxBarWidth = double.MaxValue, // Optional: Adjust as needed
+                    Fill = new SolidColorPaint(SKColors.Blue) // Set a consistent color (e.g., blue)
+                }
             };
 
             OnPropertyChanged(nameof(SummerSeries));
@@ -160,16 +125,23 @@ public partial class HeatDemandViewModel : ViewModelBase
 
             WinterSeries = new ISeries[]
             {
-            new LineSeries<double>
-            {
-                Values = heatDemandData.ToArray(),
-                Fill = null,
-                GeometrySize = 0,
-                LineSmoothness = 0
-            }
+                new ColumnSeries<double>
+                {
+                    Values = heatDemandData.ToArray(),
+                    Padding = 0, // Defines the distance between bars
+                    MaxBarWidth = double.MaxValue, // Optional: Adjust as needed
+                    Fill = new SolidColorPaint(SKColors.Red) // Set a consistent color (e.g., red)
+                }
             };
 
             OnPropertyChanged(nameof(WinterSeries));
         }
+    }
+
+    private static string[] GenerateTimeLabels()
+    {
+        return Enumerable.Range(0, 24)
+            .Select(i => $"{i}:00-{(i + 1) % 24}:00")
+            .ToArray();
     }
 }

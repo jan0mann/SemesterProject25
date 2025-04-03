@@ -1,4 +1,4 @@
-WTimeFrom,WHourFrom, WTimeTo,WHourTo, WHeatDemand, WPrice, STimeFrom,SHourFrom, STimeTo,SHourTo, SHeatDemand, SPrice
+WTimeFrom,WHourFrom,WTimeTo,WHourTo,WHeatDemand,WPrice,STimeFrom,SHourFrom,STimeTo,SHourTo,SHeatDemand,SPrice
 3/1/2024,0:00,3/1/2024,1:00,6.62,1190.94,8/11/2024,0:00,8/11/2024,1:00,1.79,752.03
 3/1/2024,1:00,3/1/2024,2:00,6.85,1154.55,8/11/2024,1:00,8/11/2024,2:00,1.85,691.05
 3/1/2024,2:00,3/1/2024,3:00,6.98,1116.22,8/11/2024,2:00,8/11/2024,3:00,1.76,674.78
