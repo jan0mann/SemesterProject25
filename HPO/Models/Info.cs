@@ -2,14 +2,15 @@ namespace HPO.Models;
 
 public class Winter
 {
-    public string? WTimeFrom { get; set;}
-    public string? WHourFrom { get; set;}
-    public string? WTimeTo { get; set;}
-    public string? WHourTo { get; set;}
+    public string? WTimeFrom { get; set; }
+    public string? WHourFrom { get; set; }
+    public string? WTimeTo { get; set; }
+    public string? WHourTo { get; set; }
+    public double? WHeatDemand { get; set; }
+    public double? WPrice { get; set; }
 
-    public double? WHeatDemand { get; set;}
-
-    public double? WPrice { get; set;}
+    // Parameterless constructor required by CsvHelper
+    public Winter() { }
 
     public Winter(string? timeFrom, string? timeTo, double? heatDemand, double? price)
     {
@@ -22,14 +23,15 @@ public class Winter
 
 public class Summer
 {
-   public string? STimeFrom { get; set;}
-   public string? SHourFrom { get; set;}
-    public string? STimeTo { get; set;}
-    public string? SHourTo { get; set;}
+    public string? STimeFrom { get; set; }
+    public string? SHourFrom { get; set; }
+    public string? STimeTo { get; set; }
+    public string? SHourTo { get; set; }
+    public double? SHeatDemand { get; set; }
+    public double? SPrice { get; set; }
 
-    public double? SHeatDemand { get; set;}
-
-    public double? SPrice { get; set;}
+    // Parameterless constructor required by CsvHelper
+    public Summer() { }
 
     public Summer(string? timeFrom, string? timeTo, double? heatDemand, double? price)
     {
