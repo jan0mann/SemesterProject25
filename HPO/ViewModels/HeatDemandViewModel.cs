@@ -44,7 +44,7 @@ public partial class HeatDemandViewModel : ViewModelBase
         }
     }
 
-    private const string CsvFilePath = "Assets/HPOInfo.csv";
+
     public ISeries[] SummerSeries { get; set; }
     public ISeries[] WinterSeries { get; set; }
 
@@ -88,7 +88,7 @@ public partial class HeatDemandViewModel : ViewModelBase
 
     private void LoadHeatDemandData()
     {
-        // These methods now use LoadData<T> internally
+
         _winterHeatDemandData = _fileReader.GetWinterHeatDemandData();
         _summerHeatDemandData = _fileReader.GetSummerHeatDemandData();
 
@@ -107,9 +107,9 @@ public partial class HeatDemandViewModel : ViewModelBase
                 new ColumnSeries<double>
                 {
                     Values = heatDemandData.ToArray(),
-                    Padding = 0, // Defines the distance between bars
-                    MaxBarWidth = double.MaxValue, // Optional: Adjust as needed
-                    Fill = new SolidColorPaint(SKColors.Blue) // Set a consistent color (e.g., blue)
+                    Padding = 0,
+                    MaxBarWidth = double.MaxValue,
+                    Fill = new SolidColorPaint(SKColors.Blue)
                 }
             };
 
@@ -128,9 +128,9 @@ public partial class HeatDemandViewModel : ViewModelBase
                 new ColumnSeries<double>
                 {
                     Values = heatDemandData.ToArray(),
-                    Padding = 0, // Defines the distance between bars
-                    MaxBarWidth = double.MaxValue, // Optional: Adjust as needed
-                    Fill = new SolidColorPaint(SKColors.Red) // Set a consistent color (e.g., red)
+                    Padding = 0,
+                    MaxBarWidth = double.MaxValue,
+                    Fill = new SolidColorPaint(SKColors.Red)
                 }
             };
 
