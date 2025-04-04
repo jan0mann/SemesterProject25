@@ -13,12 +13,6 @@ namespace HPO.Models;
 public class FileReader
 {
 
-    public void ReadInfo()
-    {
-        List<Winter> winterList = WriteList<Winter>();
-        List<Summer> summerList = WriteList<Summer>();
-    }
-
     public List<T> WriteList<T>()
     {   
         string basePath = AppDomain.CurrentDomain.BaseDirectory;
@@ -81,4 +75,6 @@ public class FileReader
 
         return summerHeatDemandData;
     }
+
+    
 }
