@@ -20,8 +20,11 @@ public class FileReader
     }
 
     public List<T> WriteList<T>()
-    {
-        using (var reader = new StreamReader(@"C:\HPO\SemesterProject25\HPO\Assets\HPOInfo.csv"))
+    {   
+        string basePath = AppDomain.CurrentDomain.BaseDirectory;
+        string filePath = Path.Combine(basePath,"Assets", "HPOInfo.csv");
+
+        using (var reader = new StreamReader(filePath))
         using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
         {
             return csv.GetRecords<T>().ToList();
