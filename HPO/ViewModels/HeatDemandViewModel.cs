@@ -125,7 +125,7 @@ public partial class HeatDemandViewModel : ViewModelBase
             foreach (var hour in data)
             {
                 var hourdata = optimizer.OptimizeHour(_boilers.Select(x=>x.Deepcopy()).ToList(), hour);
-                _winterOptimizedData[day].Add(hourdata.deepcopy());
+                _winterOptimizedData[day].Add(hourdata);
             }
         }
 
@@ -252,7 +252,7 @@ public partial class HeatDemandViewModel : ViewModelBase
                     LineSmoothness = 0,
                     Name = "Sum"
                 });
-
+            
             WinterSeries = winterSeriesList.ToArray();
 
             OnPropertyChanged(nameof(WinterSeries));
