@@ -60,6 +60,7 @@ public partial class HeatDemandViewModel : ViewModelBase
 
 
     private Dictionary<int, List<Optimizer.hourData>> _winterOptimizedData;
+    private Dictionary<int, List<Optimizer.hourData>> _summerOptimizedData;
     private ObservableCollection<Boiler> _boilers;
 
 
@@ -70,6 +71,7 @@ public partial class HeatDemandViewModel : ViewModelBase
 
 
         _winterOptimizedData = new Dictionary<int, List<Optimizer.hourData>>();
+        _summerOptimizedData = new Dictionary<int, List<Optimizer.hourData>>();
         var assetManager = new AssetManager();
         _boilers = assetManager.ShowInfo();
 
@@ -111,8 +113,13 @@ public partial class HeatDemandViewModel : ViewModelBase
                 winterHeatDemandData[day].Add(winter.WHeatDemand.Value);
             }
         }
+        _winterHeatDemandData = winterHeatDemandData;
 
-        foreach (var day in winterHeatDemandData.Keys)
+        foreach (var day in WinterDays){
+            _winterOptimizedData[day] = new List<Optimizer.hourData>();
+        }
+
+        foreach (var day in _winterHeatDemandData.Keys)
         {
             var data = winterHeatDemandData[day];
             _winterOptimizedData[day] = new List<Optimizer.hourData>();
@@ -129,6 +136,7 @@ public partial class HeatDemandViewModel : ViewModelBase
 
     public Dictionary<int, List<double>> GetSummerHeatDemandData()
     {
+        var optimizer = new Optimizer.Optimizer();
         var summerList = new FileReader().WriteList<Summer>();
 
         var summerHeatDemandData = new Dictionary<int, List<double>>();
@@ -149,6 +157,25 @@ public partial class HeatDemandViewModel : ViewModelBase
             }
         }
 
+        _summerHeatDemandData = summerHeatDemandData;
+
+        foreach (var day in SummerDays){
+            _summerOptimizedData[day] = new List<Optimizer.hourData>();
+        }
+
+        foreach (var day in _summerHeatDemandData.Keys)
+        {
+            var data = summerHeatDemandData[day];
+            _winterOptimizedData[day] = new List<Optimizer.hourData>();
+
+            foreach (var hour in data)
+            {
+                var hourdata = optimizer.OptimizeHour(_boilers.Select(x => x.Deepcopy()).ToList(), hour);
+                _summerOptimizedData[day].Add(hourdata);
+            }
+        }
+
+
         return summerHeatDemandData;
     }
 
@@ -157,17 +184,101 @@ public partial class HeatDemandViewModel : ViewModelBase
         if (_summerHeatDemandData.ContainsKey(SelectedSummerDay))
         {
             var heatDemandData = _summerHeatDemandData[SelectedSummerDay];
-
-            SummerSeries = new ISeries[]
+            var hoursData = _summerOptimizedData[SelectedSummerDay];
+            Dictionary<string, List<double>> boilersData = new();
+            
+            foreach (var boiler in _boilers)
             {
-            new LineSeries<double>
-            {
-                Values = heatDemandData.ToArray(),
-                Fill = null,
-                GeometrySize = 0,
-                LineSmoothness = 0
+                boilersData[boiler.Name] = new List<double>();
             }
+
+            //convert
+            foreach (var hour in hoursData)
+            {
+                foreach (var boiler in hour.Boilers)
+                {
+                    //Console.WriteLine(boiler.HeatProduced);
+                    boilersData[boiler.Name].Add(boiler.HeatProduced);
+                }
+            }
+
+            var summerSeriesList = new List<ISeries>
+            {
+                new LineSeries<double>
+                {
+                    Values = heatDemandData.ToArray(),
+                    Fill = null,
+                    GeometrySize = 0,
+                    LineSmoothness = 0,
+                    Name = "Heat Demand"
+                }
             };
+            foreach (var boiler in boilersData)
+            {
+                summerSeriesList.Add(
+                    new LineSeries<double>
+                    {
+                        Values = boiler.Value.ToArray(),
+                        Fill = null,
+                        GeometrySize = 0,
+                        LineSmoothness = 0,
+                        Name = boiler.Key
+                    }
+                );
+                //foreach(var val in boiler.Value){Console.WriteLine(val);}
+            }
+            List<double> summedCO2 = new();
+            List<double> summedCost = new();
+            foreach (var hour in hoursData){
+                double sumCO2 = 0;
+                double sumCost = 0;
+                foreach (var boiler in hour.Boilers){
+                    sumCO2+=boiler.CO2Produced;
+                    sumCost+=boiler.Cost;
+
+                }
+                summedCO2.Add(sumCO2/100);
+                summedCost.Add(sumCost/200);
+            }
+            summerSeriesList.Add(
+                new LineSeries<double>
+                {
+                    Values = summedCO2,
+                    Fill = null,
+                    GeometrySize = 0,
+                    LineSmoothness = 0,
+                    Name = "CO2 Emssion *100"
+                });
+            summerSeriesList.Add(
+                new LineSeries<double>
+                {
+                    Values = summedCost,
+                    Fill = null,
+                    GeometrySize = 0,
+                    LineSmoothness = 0,
+                    Name = "Cost *200"
+                });
+
+            //just for easier tesing, to check if sum of boilers produced is equal to requested
+            // List<double> summed = new();
+            // foreach (var hour in hoursData){
+            //     double sum = 0;
+            //     foreach (var boiler in hour.Boilers){
+            //         sum+=boiler.HeatProduced;
+            //     }
+            //     summed.Add(sum);
+            // }
+            // winterSeriesList.Add(new LineSeries<double>
+            //     {
+            //         Values = summed,
+            //         Fill = null,
+            //         GeometrySize = 0,
+            //         LineSmoothness = 0,
+            //         Name = "Sum"
+            //     });
+            
+            SummerSeries = summerSeriesList.ToArray();
+
 
             OnPropertyChanged(nameof(SummerSeries));
         }
@@ -224,31 +335,60 @@ public partial class HeatDemandViewModel : ViewModelBase
                 );
                 //foreach(var val in boiler.Value){Console.WriteLine(val);}
             }
+            List<double> summedCO2 = new();
+            List<double> summedCost = new();
+            foreach (var hour in hoursData){
+                double sumCO2 = 0;
+                double sumCost = 0;
+                foreach (var boiler in hour.Boilers){
+                    sumCO2+=boiler.CO2Produced;
+                    sumCost+=boiler.Cost;
+                }
+                summedCO2.Add(sumCO2/100);
+                summedCost.Add(sumCost/200);
+            }
 
+            winterSeriesList.Add(
+                new LineSeries<double>
+                {
+                    Values = summedCO2,
+                    Fill = null,
+                    GeometrySize = 0,
+                    LineSmoothness = 0,
+                    Name = "CO2 Emssion *100"
+                });
+            winterSeriesList.Add(
+                new LineSeries<double>
+                {
+                    Values = summedCost,
+                    Fill = null,
+                    GeometrySize = 0,
+                    LineSmoothness = 0,
+                    Name = "Cost *200"
+                });
 
             //just for easier tesing, to check if sum of boilers produced is equal to requested
             List<double> summed = new();
-            foreach (var hour in hoursData)
-            {
+            foreach (var hour in hoursData){
                 double sum = 0;
-                foreach (var boiler in hour.Boilers)
-                {
-                    sum += boiler.HeatProduced;
+                foreach (var boiler in hour.Boilers){
+                    sum+=boiler.HeatProduced;
                 }
                 summed.Add(sum);
             }
             winterSeriesList.Add(new LineSeries<double>
-            {
-                Values = summed,
-                Fill = null,
-                GeometrySize = 0,
-                LineSmoothness = 0,
-                Name = "Sum"
-            });
-
+                {
+                    Values = summed,
+                    Fill = null,
+                    GeometrySize = 0,
+                    LineSmoothness = 0,
+                    Name = "Sum"
+                });
+            
             WinterSeries = winterSeriesList.ToArray();
 
             OnPropertyChanged(nameof(WinterSeries));
         }
     }
+
 }
