@@ -10,6 +10,12 @@ namespace Testing
     public class OptimizerTests
     {
         [Fact]
+        public void Test1()
+        {
+        Assert.True(true);
+        }
+
+        [Fact]
         public void OptimizeHour_ShouldCorrectlyAssignDemandToBoilersInOrderOfEfficiency()
         {
             // Arrange
