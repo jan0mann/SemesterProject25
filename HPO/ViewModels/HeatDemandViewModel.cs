@@ -61,7 +61,7 @@ public partial class HeatDemandViewModel : ViewModelBase
     private Dictionary<int, List<double>> _summerHeatDemandData;
 
 
-    private Dictionary<int, List<Optimizer.Optimizer.hourData>> _winterOptimizedData;
+    private Dictionary<int, List<Optimizer.hourData>> _winterOptimizedData;
     private ObservableCollection<Boiler> _boilers;
 
 
@@ -73,7 +73,7 @@ public partial class HeatDemandViewModel : ViewModelBase
         _summerHeatDemandData = new Dictionary<int, List<double>>();
 
 
-        _winterOptimizedData = new Dictionary<int, List<Optimizer.Optimizer.hourData>>();
+        _winterOptimizedData = new Dictionary<int, List<Optimizer.hourData>>();
         var assetManager = new AssetManager();
         _boilers = assetManager.ShowInfo();
 
@@ -86,7 +86,7 @@ public partial class HeatDemandViewModel : ViewModelBase
     private void LoadWinterHeatDemandData()
     {
         var optimizer = new Optimizer.Optimizer();
-        List<Boiler> boilersList = [.. _boilers];
+
 
         using (var reader = new StreamReader(CsvFilePath))
         {
@@ -106,28 +106,32 @@ public partial class HeatDemandViewModel : ViewModelBase
                     if (!_winterHeatDemandData.ContainsKey(day))
                     {
                         _winterHeatDemandData[day] = new List<double>();
-                        _winterOptimizedData[day] = new List<Optimizer.Optimizer.hourData>();
+                        _winterOptimizedData[day] = new List<Optimizer.hourData>();
                     }
 
                     _winterHeatDemandData[day].Add(wHeatDemand);
-                    var hourdata = optimizer.OptimizeHour(boilersList, wHeatDemand);
-                    _winterOptimizedData[day].Add(hourdata.deepcopy());
+                    // var hourdata = optimizer.OptimizeHour(boilersList, wHeatDemand);
+                    // _winterOptimizedData[day].Add(hourdata.deepcopy());
 
                     //Console.WriteLine(hourdata.Demand+"  B1:"+hourdata.Boilers[0].HeatProduced+"  B2:"+hourdata.Boilers[1].HeatProduced+"  B3:"+hourdata.Boilers[2].HeatProduced);
                 }
             }
         }
 
+        foreach (var day in _winterHeatDemandData.Keys)
+        {
+            var data = _winterHeatDemandData[day];
+            _winterOptimizedData[day] = new List<Optimizer.hourData>();
+            foreach (var hour in data)
+            {
+                var hourdata = optimizer.OptimizeHour(_boilers.Select(x=>x.Deepcopy()).ToList(), hour);
+                _winterOptimizedData[day].Add(hourdata.deepcopy());
+            }
+        }
 
-
-        //_winterOptimizedData = optimizer.Optimize(boilersList, _winterHeatDemandData.Values.SelectMany(x => x).ToList());
+        
 
         UpdateWinterGraph();
-    }
-
-    private Boiler Boiler(string v1, int v2, int v3, int v4, int v5)
-    {
-        throw new NotImplementedException();
     }
 
     private void LoadSummerHeatDemandData()
@@ -228,10 +232,26 @@ public partial class HeatDemandViewModel : ViewModelBase
                     }
                 );
                 //foreach(var val in boiler.Value){Console.WriteLine(val);}
-                
-
             }
 
+
+            //just for easier tesing, to check if sum of boilers produced is equal to requested
+            List<double> summed = new();
+            foreach (var hour in hoursData){
+                double sum = 0;
+                foreach (var boiler in hour.Boilers){
+                    sum+=boiler.HeatProduced;
+                }
+                summed.Add(sum);
+            }
+            winterSeriesList.Add(new LineSeries<double>
+                {
+                    Values = summed,
+                    Fill = null,
+                    GeometrySize = 0,
+                    LineSmoothness = 0,
+                    Name = "Sum"
+                });
 
             WinterSeries = winterSeriesList.ToArray();
 
