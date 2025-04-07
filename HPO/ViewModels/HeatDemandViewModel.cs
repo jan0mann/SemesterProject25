@@ -8,6 +8,8 @@ using System.Linq;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using HPO.Models;
+using HPO.Optimizer;
+using System.Configuration.Assemblies;
 
 namespace HPO.ViewModels;
 
@@ -58,24 +60,37 @@ public partial class HeatDemandViewModel : ViewModelBase
     private Dictionary<int, List<double>> _winterHeatDemandData;
     private Dictionary<int, List<double>> _summerHeatDemandData;
 
+
+    private Dictionary<int, List<Optimizer.Optimizer.hourData>> _winterOptimizedData;
+    private ObservableCollection<Boiler> _boilers;
+
+
     public HeatDemandViewModel()
     {
         SummerDays = new ObservableCollection<int>(Enumerable.Range(11, 14));
         WinterDays = new ObservableCollection<int>(Enumerable.Range(1, 14));
         _winterHeatDemandData = new Dictionary<int, List<double>>();
         _summerHeatDemandData = new Dictionary<int, List<double>>();
+
+
+        _winterOptimizedData = new Dictionary<int, List<Optimizer.Optimizer.hourData>>();
+        var assetManager = new AssetManager();
+        _boilers = assetManager.ShowInfo();
+
         LoadWinterHeatDemandData();
         LoadSummerHeatDemandData();
         SelectedSummerDay = 11;
         SelectedWinterDay = 1; 
     }
-
+ 
     private void LoadWinterHeatDemandData()
     {
+        var optimizer = new Optimizer.Optimizer();
+        List<Boiler> boilersList = [.. _boilers];
+
         using (var reader = new StreamReader(CsvFilePath))
         {
             var header = reader.ReadLine(); 
-
             while (!reader.EndOfStream)
             {
                 var line = reader.ReadLine();
@@ -91,15 +106,30 @@ public partial class HeatDemandViewModel : ViewModelBase
                     if (!_winterHeatDemandData.ContainsKey(day))
                     {
                         _winterHeatDemandData[day] = new List<double>();
+                        _winterOptimizedData[day] = new List<Optimizer.Optimizer.hourData>();
                     }
 
                     _winterHeatDemandData[day].Add(wHeatDemand);
+                    var hourdata = optimizer.OptimizeHour(boilersList, wHeatDemand);
+                    _winterOptimizedData[day].Add(hourdata.deepcopy());
+
+                    //Console.WriteLine(hourdata.Demand+"  B1:"+hourdata.Boilers[0].HeatProduced+"  B2:"+hourdata.Boilers[1].HeatProduced+"  B3:"+hourdata.Boilers[2].HeatProduced);
                 }
             }
         }
 
+
+
+        //_winterOptimizedData = optimizer.Optimize(boilersList, _winterHeatDemandData.Values.SelectMany(x => x).ToList());
+
         UpdateWinterGraph();
     }
+
+    private Boiler Boiler(string v1, int v2, int v3, int v4, int v5)
+    {
+        throw new NotImplementedException();
+    }
+
     private void LoadSummerHeatDemandData()
     {
         using (var reader = new StreamReader(CsvFilePath))
@@ -157,17 +187,53 @@ public partial class HeatDemandViewModel : ViewModelBase
         if (_winterHeatDemandData.ContainsKey(SelectedWinterDay))
         {
             var heatDemandData = _winterHeatDemandData[SelectedWinterDay];
-
-            WinterSeries = new ISeries[]
-            {
-            new LineSeries<double>
-            {
-                Values = heatDemandData.ToArray(),
-                Fill = null,
-                GeometrySize = 0,
-                LineSmoothness = 0
+            var hoursData = _winterOptimizedData[SelectedWinterDay];
+            Dictionary<string, List<double>> boilersData = new();
+           
+            foreach (var boiler in _boilers){
+                boilersData[boiler.Name] = new List<double>();
             }
+
+
+            //convert
+            foreach (var hour in hoursData){
+                foreach (var boiler in hour.Boilers){
+                    //Console.WriteLine(boiler.HeatProduced);
+                    boilersData[boiler.Name].Add(boiler.HeatProduced);
+                }
+            }
+
+
+
+            var winterSeriesList = new List<ISeries>
+            {
+                new LineSeries<double>
+                {
+                    Values = heatDemandData.ToArray(),
+                    Fill = null,
+                    GeometrySize = 0,
+                    LineSmoothness = 0,
+                    Name = "Heat Demand"
+                }
             };
+            foreach (var boiler in boilersData){
+                winterSeriesList.Add(
+                    new LineSeries<double>
+                    {
+                        Values = boiler.Value.ToArray(),
+                        Fill = null,
+                        GeometrySize = 0,
+                        LineSmoothness = 0,
+                        Name = boiler.Key
+                    }
+                );
+                //foreach(var val in boiler.Value){Console.WriteLine(val);}
+                
+
+            }
+
+
+            WinterSeries = winterSeriesList.ToArray();
 
             OnPropertyChanged(nameof(WinterSeries));
         }

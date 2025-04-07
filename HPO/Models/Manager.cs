@@ -5,7 +5,7 @@ namespace HPO.Models
     public class AssetManager
     {
 
-        public ObservableCollection<Boiler> ShowInfoCombined()//change the name to just ShowInfo after removing the old method
+        public ObservableCollection<Boiler> ShowInfo()
         {
             var Boilers = new ObservableCollection<Boiler>
             {

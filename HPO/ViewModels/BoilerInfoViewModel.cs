@@ -23,7 +23,7 @@ namespace HPO.ViewModels
         private void InitializeBoilers()
         {
             var assetManager = new AssetManager();
-            Boilers = assetManager.ShowInfoCombined();
+            Boilers = assetManager.ShowInfo();
         }
     }
 }
