@@ -32,7 +32,7 @@
                 </Grid>
             </Grid>
             
-            <lvc:CartesianChart Grid.Column="2" Series="{Binding SummerSeries}" YAxes="{Binding YAxes}" Height="600" Width="500"></lvc:CartesianChart>
+            <lvc:CartesianChart Grid.Column="2" Series="{Binding SummerSeries}" YAxes="{Binding YAxes}" Height="400" Width="500"></lvc:CartesianChart>
 
         </Grid>
     </StackPanel>
