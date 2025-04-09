@@ -35,7 +35,7 @@ namespace HPO.Optimizer
 
     public class Optimizer
     {
-        List<Boiler> calculateEfficiency(List<Boiler> boilers)
+        public List<Boiler> calculateEfficiency(List<Boiler> boilers)
         {
             // foreach(var boiler in boilers){
             //     //part where we calculate the efficiency of the boiler
