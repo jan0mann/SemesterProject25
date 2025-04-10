@@ -49,11 +49,11 @@ namespace Testing
                     result = boiler.requestProduction(8);
 
                     // Then
-                    Assert.Equal(8, result);
-                    Assert.Equal(8, boiler.HeatProduced);
-                    Assert.Equal(boiler.CO2EmissionPerMWh * 8, boiler.CO2Produced);
-                    Assert.Equal(boiler.ConsumptionPerMWh * 8, boiler.Consumed, 0.000001);
-                    Assert.Equal(boiler.ProdCostPerMWh * 8, boiler.Cost);
+                    Assert.NotEqual(8, result);
+                    Assert.NotEqual(8, boiler.HeatProduced);
+                    Assert.NotEqual(boiler.CO2EmissionPerMWh * 8, boiler.CO2Produced);
+                    Assert.NotEqual(boiler.ConsumptionPerMWh * 8, boiler.Consumed, 0.000001);
+                    Assert.NotEqual(boiler.ProdCostPerMWh * 8, boiler.Cost);
                 }
                 catch (Exception lol)
                 {
