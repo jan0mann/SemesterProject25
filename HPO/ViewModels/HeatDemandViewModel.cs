@@ -43,32 +43,61 @@ public partial class HeatDemandViewModel : ViewModelBase
             }
         }
     }
+
     public ISeries[] SummerSeries { get; set; }
     public ISeries[] WinterSeries { get; set; }
+    public ISeries[] SummerCostCO2Series { get; set; }
+    public ISeries[] WinterCostCO2Series { get; set; }
 
-    public Axis[] YAxes { get; set; }
+    public Axis[] HeatDemandYAxes { get; set; }
+    = new Axis[]
+    {
+        new Axis
+        {
+            Name = "Heat Demand in MW/h",
+            MinLimit = 0,
+        }
+    };
+
+    public Axis[] CostCO2YAxes { get; set; }
         = new Axis[]
         {
-            new Axis
-            {
-                Name = "Heat Demand in MW/h",
-            }
+        new Axis
+        {
+            Name = "Cost and CO2 Emission",
+            MinLimit = 0,
+        }
+        };
+    public Axis[] XAxes { get; set; }
+        = new Axis[]
+        {
+        new Axis
+        {
+            Name = "Hours",
+            Labels = Enumerable.Range(0, 24)
+                .Select(i => $"{i}:00-{i + 1}:00")
+                .ToArray(),
+            LabelsRotation = 45,
+        }
         };
 
     private Dictionary<int, List<double>> _winterHeatDemandData;
     private Dictionary<int, List<double>> _summerHeatDemandData;
-
+    private readonly Dictionary<string, SkiaSharp.SKColor> _boilerColors = new()
+    {
+        { "Gas Boiler 1", new SkiaSharp.SKColor(255, 0, 0) },
+        { "Gas Boiler 2", new SkiaSharp.SKColor(0, 255, 0) },
+        { "Oil Boiler 1", new SkiaSharp.SKColor(255, 255, 0) },
+    };
 
     private Dictionary<int, List<Optimizer.hourData>> _winterOptimizedData;
     private Dictionary<int, List<Optimizer.hourData>> _summerOptimizedData;
     private ObservableCollection<Boiler> _boilers;
 
-
     public HeatDemandViewModel()
     {
         SummerDays = new ObservableCollection<int>(Enumerable.Range(11, 14));
         WinterDays = new ObservableCollection<int>(Enumerable.Range(1, 14));
-
 
         _winterOptimizedData = new Dictionary<int, List<Optimizer.hourData>>();
         _summerOptimizedData = new Dictionary<int, List<Optimizer.hourData>>();
@@ -83,13 +112,11 @@ public partial class HeatDemandViewModel : ViewModelBase
 
     private void LoadHeatDemandData()
     {
-
         _winterHeatDemandData = GetWinterHeatDemandData();
         _summerHeatDemandData = GetSummerHeatDemandData();
 
         UpdateWinterGraph();
         UpdateSummerGraph();
-
     }
 
     public Dictionary<int, List<double>> GetWinterHeatDemandData()
@@ -115,7 +142,8 @@ public partial class HeatDemandViewModel : ViewModelBase
         }
         _winterHeatDemandData = winterHeatDemandData;
 
-        foreach (var day in WinterDays){
+        foreach (var day in WinterDays)
+        {
             _winterOptimizedData[day] = new List<Optimizer.hourData>();
         }
 
@@ -159,14 +187,15 @@ public partial class HeatDemandViewModel : ViewModelBase
 
         _summerHeatDemandData = summerHeatDemandData;
 
-        foreach (var day in SummerDays){
+        foreach (var day in SummerDays)
+        {
             _summerOptimizedData[day] = new List<Optimizer.hourData>();
         }
 
         foreach (var day in _summerHeatDemandData.Keys)
         {
             var data = summerHeatDemandData[day];
-            _winterOptimizedData[day] = new List<Optimizer.hourData>();
+            _summerOptimizedData[day] = new List<Optimizer.hourData>();
 
             foreach (var hour in data)
             {
@@ -174,7 +203,6 @@ public partial class HeatDemandViewModel : ViewModelBase
                 _summerOptimizedData[day].Add(hourdata);
             }
         }
-
 
         return summerHeatDemandData;
     }
@@ -186,101 +214,104 @@ public partial class HeatDemandViewModel : ViewModelBase
             var heatDemandData = _summerHeatDemandData[SelectedSummerDay];
             var hoursData = _summerOptimizedData[SelectedSummerDay];
             Dictionary<string, List<double>> boilersData = new();
-            
+
             foreach (var boiler in _boilers)
             {
                 boilersData[boiler.Name] = new List<double>();
             }
 
-            //convert
             foreach (var hour in hoursData)
             {
                 foreach (var boiler in hour.Boilers)
                 {
-                    //Console.WriteLine(boiler.HeatProduced);
                     boilersData[boiler.Name].Add(boiler.HeatProduced);
                 }
             }
 
-            var summerSeriesList = new List<ISeries>
+            var filteredBoilersData = boilersData
+                .Where(b => b.Value.Any(v => v > 0))
+                .OrderByDescending(b => b.Value.Sum())
+                .ToList();
+
+            var summerSeriesList = new List<ISeries>();
+            var summerCostCO2SeriesList = new List<ISeries>();
+
+            foreach (var boiler in filteredBoilersData)
             {
+                summerSeriesList.Add(
+                    new StackedAreaSeries<double>
+                    {
+                        Values = boiler.Value.ToArray(),
+                        GeometrySize = 0,
+                        LineSmoothness = 0,
+                        Name = boiler.Key,
+                        Fill = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
+                        {
+                            Color = _boilerColors.ContainsKey(boiler.Key)
+                                ? _boilerColors[boiler.Key]
+                                : new SkiaSharp.SKColor(128, 128, 128)
+                        }
+                    }
+                );
+            }
+
+            summerSeriesList.Add(
                 new LineSeries<double>
                 {
                     Values = heatDemandData.ToArray(),
-                    Fill = null,
                     GeometrySize = 0,
                     LineSmoothness = 0,
+                    Stroke = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
+                    {
+                        Color = new SkiaSharp.SKColor(0, 0, 0),
+                        StrokeThickness = 6
+                    },
+                    Fill = null,
                     Name = "Heat Demand"
                 }
-            };
-            foreach (var boiler in boilersData)
-            {
-                summerSeriesList.Add(
-                    new LineSeries<double>
-                    {
-                        Values = boiler.Value.ToArray(),
-                        Fill = null,
-                        GeometrySize = 0,
-                        LineSmoothness = 0,
-                        Name = boiler.Key
-                    }
-                );
-                //foreach(var val in boiler.Value){Console.WriteLine(val);}
-            }
+            );
+
             List<double> summedCO2 = new();
             List<double> summedCost = new();
-            foreach (var hour in hoursData){
+            foreach (var hour in hoursData)
+            {
                 double sumCO2 = 0;
                 double sumCost = 0;
-                foreach (var boiler in hour.Boilers){
-                    sumCO2+=boiler.CO2Produced;
-                    sumCost+=boiler.Cost;
-
-                }
-                summedCO2.Add(sumCO2/100);
-                summedCost.Add(sumCost/200);
-            }
-            summerSeriesList.Add(
-                new LineSeries<double>
+                foreach (var boiler in hour.Boilers)
                 {
-                    Values = summedCO2,
-                    Fill = null,
-                    GeometrySize = 0,
-                    LineSmoothness = 0,
-                    Name = "CO2 Emssion *100"
-                });
-            summerSeriesList.Add(
-                new LineSeries<double>
+                    sumCO2 += boiler.CO2Produced;
+                    sumCost += boiler.Cost;
+                }
+                summedCO2.Add(sumCO2);
+                summedCost.Add(sumCost);
+            }
+
+            summerCostCO2SeriesList.Add(
+            new ColumnSeries<double>
+            {
+                Values = summedCO2,
+                Fill = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
+                {
+                    Color = new SkiaSharp.SKColor(255, 0, 0)
+                },
+                Name = "CO2 Emission(Kg)"
+            });
+            summerCostCO2SeriesList.Add(
+                new ColumnSeries<double>
                 {
                     Values = summedCost,
-                    Fill = null,
-                    GeometrySize = 0,
-                    LineSmoothness = 0,
-                    Name = "Cost *200"
+                    Fill = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
+                    {
+                        Color = new SkiaSharp.SKColor(0, 0, 255)
+                    },
+                    Name = "Cost(DKK)"
                 });
 
-            //just for easier tesing, to check if sum of boilers produced is equal to requested
-            // List<double> summed = new();
-            // foreach (var hour in hoursData){
-            //     double sum = 0;
-            //     foreach (var boiler in hour.Boilers){
-            //         sum+=boiler.HeatProduced;
-            //     }
-            //     summed.Add(sum);
-            // }
-            // winterSeriesList.Add(new LineSeries<double>
-            //     {
-            //         Values = summed,
-            //         Fill = null,
-            //         GeometrySize = 0,
-            //         LineSmoothness = 0,
-            //         Name = "Sum"
-            //     });
-            
             SummerSeries = summerSeriesList.ToArray();
-
+            SummerCostCO2Series = summerCostCO2SeriesList.ToArray();
 
             OnPropertyChanged(nameof(SummerSeries));
+            OnPropertyChanged(nameof(SummerCostCO2Series));
         }
     }
 
@@ -297,98 +328,97 @@ public partial class HeatDemandViewModel : ViewModelBase
                 boilersData[boiler.Name] = new List<double>();
             }
 
-
-            //convert
             foreach (var hour in hoursData)
             {
                 foreach (var boiler in hour.Boilers)
                 {
-                    //Console.WriteLine(boiler.HeatProduced);
                     boilersData[boiler.Name].Add(boiler.HeatProduced);
                 }
             }
 
+            var filteredBoilersData = boilersData
+                .Where(b => b.Value.Any(v => v > 0))
+                .OrderByDescending(b => b.Value.Sum())
+                .ToList();
 
+            var winterSeriesList = new List<ISeries>();
+            var winterCostCO2SeriesList = new List<ISeries>();
 
-            var winterSeriesList = new List<ISeries>
+            foreach (var boiler in filteredBoilersData)
             {
+                winterSeriesList.Add(
+                    new StackedAreaSeries<double>
+                    {
+                        Values = boiler.Value.ToArray(),
+                        GeometrySize = 0,
+                        LineSmoothness = 0,
+                        Name = boiler.Key,
+                        Fill = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
+                        {
+                            Color = _boilerColors.ContainsKey(boiler.Key)
+                                ? _boilerColors[boiler.Key]
+                                : new SkiaSharp.SKColor(128, 128, 128)
+                        }
+                    }
+                );
+            }
+
+            winterSeriesList.Add(
                 new LineSeries<double>
                 {
                     Values = heatDemandData.ToArray(),
-                    Fill = null,
                     GeometrySize = 0,
                     LineSmoothness = 0,
+                    Stroke = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
+                    {
+                        Color = new SkiaSharp.SKColor(0, 0, 0),
+                        StrokeThickness = 6
+                    },
+                    Fill = null,
                     Name = "Heat Demand"
                 }
-            };
-            foreach (var boiler in boilersData)
-            {
-                winterSeriesList.Add(
-                    new LineSeries<double>
-                    {
-                        Values = boiler.Value.ToArray(),
-                        Fill = null,
-                        GeometrySize = 0,
-                        LineSmoothness = 0,
-                        Name = boiler.Key
-                    }
-                );
-                //foreach(var val in boiler.Value){Console.WriteLine(val);}
-            }
+            );
+
             List<double> summedCO2 = new();
             List<double> summedCost = new();
-            foreach (var hour in hoursData){
+            foreach (var hour in hoursData)
+            {
                 double sumCO2 = 0;
                 double sumCost = 0;
-                foreach (var boiler in hour.Boilers){
-                    sumCO2+=boiler.CO2Produced;
-                    sumCost+=boiler.Cost;
+                foreach (var boiler in hour.Boilers)
+                {
+                    sumCO2 += boiler.CO2Produced;
+                    sumCost += boiler.Cost;
                 }
-                summedCO2.Add(sumCO2/100);
-                summedCost.Add(sumCost/200);
+                summedCO2.Add(sumCO2);
+                summedCost.Add(sumCost);
             }
 
-            winterSeriesList.Add(
-                new LineSeries<double>
+            winterCostCO2SeriesList.Add(
+            new ColumnSeries<double>
+            {
+                Values = summedCO2,
+                Fill = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
                 {
-                    Values = summedCO2,
-                    Fill = null,
-                    GeometrySize = 0,
-                    LineSmoothness = 0,
-                    Name = "CO2 Emssion *100"
-                });
-            winterSeriesList.Add(
-                new LineSeries<double>
+                    Color = new SkiaSharp.SKColor(255, 0, 0)
+                },
+                Name = "CO2 Emission(Kg)"
+            });
+            winterCostCO2SeriesList.Add(
+                new ColumnSeries<double>
                 {
                     Values = summedCost,
-                    Fill = null,
-                    GeometrySize = 0,
-                    LineSmoothness = 0,
-                    Name = "Cost *200"
+                    Fill = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
+                    {
+                        Color = new SkiaSharp.SKColor(0, 0, 255)
+                    },
+                    Name = "Cost(DKK)"
                 });
-
-            //just for easier tesing, to check if sum of boilers produced is equal to requested
-            List<double> summed = new();
-            foreach (var hour in hoursData){
-                double sum = 0;
-                foreach (var boiler in hour.Boilers){
-                    sum+=boiler.HeatProduced;
-                }
-                summed.Add(sum);
-            }
-            winterSeriesList.Add(new LineSeries<double>
-                {
-                    Values = summed,
-                    Fill = null,
-                    GeometrySize = 0,
-                    LineSmoothness = 0,
-                    Name = "Sum"
-                });
-            
             WinterSeries = winterSeriesList.ToArray();
+            WinterCostCO2Series = winterCostCO2SeriesList.ToArray();
 
             OnPropertyChanged(nameof(WinterSeries));
+            OnPropertyChanged(nameof(WinterCostCO2Series));
         }
     }
-
 }
