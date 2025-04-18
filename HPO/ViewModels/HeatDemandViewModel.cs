@@ -10,6 +10,7 @@ using LiveChartsCore.SkiaSharpView;
 using HPO.Models;
 using HPO.Optimizer;
 using System.Configuration.Assemblies;
+using Avalonia.Media;
 
 namespace HPO.ViewModels;
 
@@ -83,12 +84,15 @@ public partial class HeatDemandViewModel : ViewModelBase
 
     private Dictionary<int, List<double>> _winterHeatDemandData;
     private Dictionary<int, List<double>> _summerHeatDemandData;
-    private readonly Dictionary<string, SkiaSharp.SKColor> _boilerColors = new()
-    {
-        { "Gas Boiler 1", new SkiaSharp.SKColor(255, 0, 0) },
-        { "Gas Boiler 2", new SkiaSharp.SKColor(0, 255, 0) },
-        { "Oil Boiler 1", new SkiaSharp.SKColor(255, 255, 0) },
-    };
+
+
+
+    // private readonly Dictionary<string, SkiaSharp.SKColor> _boilerColors = new()
+    // {
+    //     { "Gas Boiler 1", new ColorsClass().getColor() },
+    //     { "Gas Boiler 2", new SkiaSharp.SKColor(0, 255, 0) },
+    //     { "Oil Boiler 1", new SkiaSharp.SKColor(255, 255, 0) },
+    // };
 
     private Dictionary<int, List<Optimizer.hourData>> _winterOptimizedData;
     private Dictionary<int, List<Optimizer.hourData>> _summerOptimizedData;
@@ -214,6 +218,7 @@ public partial class HeatDemandViewModel : ViewModelBase
             var heatDemandData = _summerHeatDemandData[SelectedSummerDay];
             var hoursData = _summerOptimizedData[SelectedSummerDay];
             Dictionary<string, List<double>> boilersData = new();
+            var colors = new ColorsClass();
 
             foreach (var boiler in _boilers)
             {
@@ -247,9 +252,10 @@ public partial class HeatDemandViewModel : ViewModelBase
                         Name = boiler.Key,
                         Fill = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
                         {
-                            Color = _boilerColors.ContainsKey(boiler.Key)
-                                ? _boilerColors[boiler.Key]
-                                : new SkiaSharp.SKColor(128, 128, 128)
+                            // Color = _boilerColors.ContainsKey(boiler.Key)
+                            //     ? _boilerColors[boiler.Key]
+                            //     : new SkiaSharp.SKColor(128, 128, 128)
+                            Color = colors.getColor()
                         }
                     }
                 );
@@ -263,7 +269,8 @@ public partial class HeatDemandViewModel : ViewModelBase
                     LineSmoothness = 0,
                     Stroke = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
                     {
-                        Color = new SkiaSharp.SKColor(0, 0, 0),
+                        //Color = new SkiaSharp.SKColor(0, 0, 0),
+                        Color = colors.getColor(),
                         StrokeThickness = 6
                     },
                     Fill = null,
@@ -292,7 +299,8 @@ public partial class HeatDemandViewModel : ViewModelBase
                 Values = summedCO2,
                 Fill = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
                 {
-                    Color = new SkiaSharp.SKColor(255, 0, 0)
+                    //Color = new SkiaSharp.SKColor(255, 0, 0)
+                    Color = colors.getColor()
                 },
                 Name = "CO2 Emission(Kg)"
             });
@@ -302,7 +310,8 @@ public partial class HeatDemandViewModel : ViewModelBase
                     Values = summedCost,
                     Fill = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
                     {
-                        Color = new SkiaSharp.SKColor(0, 0, 255)
+                        //Color = new SkiaSharp.SKColor(0, 0, 255)
+                        Color = colors.getColor()
                     },
                     Name = "Cost(DKK)"
                 });
@@ -322,6 +331,7 @@ public partial class HeatDemandViewModel : ViewModelBase
             var heatDemandData = _winterHeatDemandData[SelectedWinterDay];
             var hoursData = _winterOptimizedData[SelectedWinterDay];
             Dictionary<string, List<double>> boilersData = new();
+            var colors = new ColorsClass();
 
             foreach (var boiler in _boilers)
             {
@@ -355,9 +365,10 @@ public partial class HeatDemandViewModel : ViewModelBase
                         Name = boiler.Key,
                         Fill = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
                         {
-                            Color = _boilerColors.ContainsKey(boiler.Key)
-                                ? _boilerColors[boiler.Key]
-                                : new SkiaSharp.SKColor(128, 128, 128)
+                            // Color = _boilerColors.ContainsKey(boiler.Key)
+                            //     ? _boilerColors[boiler.Key]
+                            //     : new SkiaSharp.SKColor(128, 128, 128)
+                            Color = colors.getColor()
                         }
                     }
                 );
@@ -371,7 +382,8 @@ public partial class HeatDemandViewModel : ViewModelBase
                     LineSmoothness = 0,
                     Stroke = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
                     {
-                        Color = new SkiaSharp.SKColor(0, 0, 0),
+                        // Color = new SkiaSharp.SKColor(0, 0, 0),
+                        Color = colors.getColor(),
                         StrokeThickness = 6
                     },
                     Fill = null,
@@ -400,7 +412,8 @@ public partial class HeatDemandViewModel : ViewModelBase
                 Values = summedCO2,
                 Fill = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
                 {
-                    Color = new SkiaSharp.SKColor(255, 0, 0)
+                    //Color = new SkiaSharp.SKColor(255, 0, 0)
+                    Color = colors.getColor()
                 },
                 Name = "CO2 Emission(Kg)"
             });
@@ -410,7 +423,8 @@ public partial class HeatDemandViewModel : ViewModelBase
                     Values = summedCost,
                     Fill = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
                     {
-                        Color = new SkiaSharp.SKColor(0, 0, 255)
+                        //Color = new SkiaSharp.SKColor(0, 0, 255)
+                        Color = colors.getColor()
                     },
                     Name = "Cost(DKK)"
                 });
