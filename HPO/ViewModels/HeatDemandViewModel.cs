@@ -85,9 +85,9 @@ public partial class HeatDemandViewModel : ViewModelBase
     private Dictionary<int, List<double>> _summerHeatDemandData;
     private readonly Dictionary<string, SkiaSharp.SKColor> _boilerColors = new()
     {
-        { "Gas Boiler 1", new SkiaSharp.SKColor(255, 0, 0) },
-        { "Gas Boiler 2", new SkiaSharp.SKColor(0, 255, 0) },
-        { "Oil Boiler 1", new SkiaSharp.SKColor(255, 255, 0) },
+        { "Gas Boiler 1", new SkiaSharp.SKColor(255, 204, 0) },
+        { "Gas Boiler 2", new SkiaSharp.SKColor(204, 102, 0) },
+        { "Oil Boiler 1", new SkiaSharp.SKColor(128, 128, 128) },
     };
 
     private Dictionary<int, List<Optimizer.hourData>> _winterOptimizedData;
