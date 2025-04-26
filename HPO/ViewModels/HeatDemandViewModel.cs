@@ -117,6 +117,9 @@ public partial class HeatDemandViewModel : ViewModelBase
 
         UpdateWinterGraph();
         UpdateSummerGraph();
+
+        ResultDataManager(_winterOptimizedData);
+        ResultDataManager(_summerOptimizedData);
     }
 
     public Dictionary<int, List<double>> GetWinterHeatDemandData()
@@ -421,4 +424,50 @@ public partial class HeatDemandViewModel : ViewModelBase
             OnPropertyChanged(nameof(WinterCostCO2Series));
         }
     }
+
+
+    private void ResultDataManager(Dictionary<int, List<Optimizer.hourData>> optimizedData)
+{
+    // Define output folder path
+    string outputDirectory = Path.Combine(AppContext.BaseDirectory, "ResultData");
+    // Ensure directory exists
+    Directory.CreateDirectory(outputDirectory);
+
+    // Create a dictionary to hold boiler-specific data
+    var boilerData = new Dictionary<string, List<string>>();
+
+    // Collect data per boiler
+    foreach (var dayEntry in optimizedData)
+    {
+        int day = dayEntry.Key;
+        var hours = dayEntry.Value;
+
+        for (int hourIndex = 0; hourIndex < hours.Count; hourIndex++)
+        {
+            var hourData = hours[hourIndex];
+
+            foreach (var boiler in hourData.Boilers)
+            {
+                if (!boilerData.ContainsKey(boiler.Name))
+                {
+                    boilerData[boiler.Name] = new List<string>();
+                    // Add header line
+                    boilerData[boiler.Name].Add("Day,Hour,HeatProduced,CO2Produced,Cost");
+                }
+                boilerData[boiler.Name].Add($"{day},{hourIndex},{boiler.HeatProduced},{boiler.CO2Produced},{boiler.Cost}");
+            }
+        }
+    }
+
+    // Write data to CSV files
+    foreach (var boilerEntry in boilerData)
+    {
+        string sanitizedBoilerName = boilerEntry.Key.Replace(" ", "_").Replace("/", "_");
+        string filePath = Path.Combine(outputDirectory, $"{sanitizedBoilerName}.csv");
+
+        File.WriteAllLines(filePath, boilerEntry.Value);
+    }
+}
+
+
 }
