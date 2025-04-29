@@ -55,7 +55,7 @@ namespace HPO.Optimizer
             }
             Boiler GasMotor = efficiencyBoilers.Find(x => x.BoilerType == BoilerType.GasMotor);
             if((GasMotor.HeatProduced == 0)&&(GasMotor.ProdCostPerMWh < elprice)){
-                GasMotor.sellElectricity();
+                GasMotor.sellElectricity(elprice);
             }
 
             return new hourData("", "", demand, efficiencyBoilers);
