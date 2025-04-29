@@ -65,7 +65,7 @@ public partial class HeatDemandViewModel : ViewModelBase
         new Axis
         {
             Name = "Cost and CO2 Emission",
-            MinLimit = 0,
+            //MinLimit = 0,
         }
         };
     public Axis[] XAxes { get; set; }
@@ -84,8 +84,8 @@ public partial class HeatDemandViewModel : ViewModelBase
         }
         };
 
-    private Dictionary<int, List<double>> _winterHeatDemandData;
-    private Dictionary<int, List<double>> _summerHeatDemandData;
+    private Dictionary<int, List<(double, double)>> _winterHeatDemandData;
+    private Dictionary<int, List<(double, double)>> _summerHeatDemandData;
     private readonly Dictionary<string, SkiaSharp.SKColor> _boilerColors = new()
     {
         { "Gas Boiler 1", new SkiaSharp.SKColor(255, 204, 0) },
@@ -125,11 +125,11 @@ public partial class HeatDemandViewModel : ViewModelBase
         ResultDataManager(_summerOptimizedData);
     }
 
-    public Dictionary<int, List<double>> GetWinterHeatDemandData()
+    public Dictionary<int, List<(double, double)>> GetWinterHeatDemandData()
     {
         var optimizer = new Optimizer.Optimizer();
         var winterList = new FileReader().WriteList<Winter>();
-        var winterHeatDemandData = new Dictionary<int, List<double>>();
+        var winterHeatDemandData = new Dictionary<int, List<(double, double)>>();
 
         foreach (var winter in winterList)
         {
@@ -140,10 +140,10 @@ public partial class HeatDemandViewModel : ViewModelBase
 
                 if (!winterHeatDemandData.ContainsKey(day))
                 {
-                    winterHeatDemandData[day] = new List<double>();
+                    winterHeatDemandData[day] = new List<(double, double)>();
                 }
 
-                winterHeatDemandData[day].Add(winter.WHeatDemand.Value);
+                winterHeatDemandData[day].Add((winter.WHeatDemand.Value, winter.WPrice.Value));
             }
         }
         _winterHeatDemandData = winterHeatDemandData;
@@ -160,7 +160,7 @@ public partial class HeatDemandViewModel : ViewModelBase
 
             foreach (var hour in data)
             {
-                var hourdata = optimizer.OptimizeHour(_boilers.Select(x => x.Deepcopy()).ToList(), hour);
+                var hourdata = optimizer.OptimizeHour(_boilers.Select(x => x.Deepcopy()).ToList(), hour.Item1, hour.Item2);
                 _winterOptimizedData[day].Add(hourdata);
             }
         }
@@ -168,12 +168,12 @@ public partial class HeatDemandViewModel : ViewModelBase
         return winterHeatDemandData;
     }
 
-    public Dictionary<int, List<double>> GetSummerHeatDemandData()
+    public Dictionary<int, List<(double, double)>> GetSummerHeatDemandData()
     {
         var optimizer = new Optimizer.Optimizer();
         var summerList = new FileReader().WriteList<Summer>();
 
-        var summerHeatDemandData = new Dictionary<int, List<double>>();
+        var summerHeatDemandData = new Dictionary<int, List<(double, double)>>();
 
         foreach (var summer in summerList)
         {
@@ -184,10 +184,10 @@ public partial class HeatDemandViewModel : ViewModelBase
 
                 if (!summerHeatDemandData.ContainsKey(day))
                 {
-                    summerHeatDemandData[day] = new List<double>();
+                    summerHeatDemandData[day] = new List<(double, double)>();
                 }
 
-                summerHeatDemandData[day].Add(summer.SHeatDemand.Value);
+                summerHeatDemandData[day].Add((summer.SHeatDemand.Value, summer.SPrice.Value));
             }
         }
 
@@ -205,7 +205,7 @@ public partial class HeatDemandViewModel : ViewModelBase
 
             foreach (var hour in data)
             {
-                var hourdata = optimizer.OptimizeHour(_boilers.Select(x => x.Deepcopy()).ToList(), hour);
+                var hourdata = optimizer.OptimizeHour(_boilers.Select(x => x.Deepcopy()).ToList(), hour.Item1, hour.Item2);
                 _summerOptimizedData[day].Add(hourdata);
             }
         }
@@ -235,7 +235,7 @@ public partial class HeatDemandViewModel : ViewModelBase
             }
 
             var filteredBoilersData = boilersData
-                .Where(b => b.Value.Any(v => v > 0))
+                //.Where(b => b.Value.Any(v => v > 0))
                 .OrderByDescending(b => b.Value.Sum())
                 .ToList();
 
@@ -260,11 +260,14 @@ public partial class HeatDemandViewModel : ViewModelBase
                     }
                 );
             }
-
+            List<double> heatDemandData2 = new();
+            foreach(var hour in heatDemandData){
+                heatDemandData2.Add(hour.Item1);
+            }
             summerSeriesList.Add(
                 new LineSeries<double>
                 {
-                    Values = heatDemandData.ToArray(),
+                    Values = heatDemandData2.ToArray(),
                     GeometrySize = 0,
                     LineSmoothness = 0,
                     Stroke = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
@@ -343,7 +346,7 @@ public partial class HeatDemandViewModel : ViewModelBase
             }
 
             var filteredBoilersData = boilersData
-                .Where(b => b.Value.Any(v => v > 0))
+                //.Where(b => b.Value.Any(v => v > 0))
                 .OrderByDescending(b => b.Value.Sum())
                 .ToList();
 
@@ -369,10 +372,15 @@ public partial class HeatDemandViewModel : ViewModelBase
                 );
             }
 
+            List<double> heatDemandData2 = new();
+            foreach(var hour in heatDemandData){
+                heatDemandData2.Add(hour.Item1);
+            }
             winterSeriesList.Add(
                 new LineSeries<double>
                 {
-                    Values = heatDemandData.ToArray(),
+                    
+                    Values = heatDemandData2.ToArray(),
                     GeometrySize = 0,
                     LineSmoothness = 0,
                     Stroke = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
@@ -397,7 +405,7 @@ public partial class HeatDemandViewModel : ViewModelBase
                     sumCost += boiler.Cost;
                 }
                 summedCO2.Add(sumCO2);
-                summedCost.Add(sumCost);
+                summedCost.Add(Math.Abs(sumCost));
             }
 
             winterCostCO2SeriesList.Add(
