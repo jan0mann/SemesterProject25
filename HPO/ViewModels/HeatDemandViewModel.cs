@@ -75,9 +75,12 @@ public partial class HeatDemandViewModel : ViewModelBase
         {
             Name = "Hours",
             Labels = Enumerable.Range(0, 24)
-                .Select(i => $"{i}:00-{i + 1}:00")
+                .Select(i => $"{i}:00-{(i + 1) % 24}:00")
                 .ToArray(),
             LabelsRotation = 45,
+            UnitWidth = 0.5,
+            MinStep = 1,
+            ForceStepToMin = true
         }
         };
 

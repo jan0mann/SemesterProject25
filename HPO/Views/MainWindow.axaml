@@ -15,24 +15,22 @@
     </Design.DataContext>
 
 <DockPanel LastChildFill="True">
-    <Border Height="60" Background="SkyBlue" BorderBrush="Black" DockPanel.Dock="Top">
-    <TextBlock Foreground="Black">Dock = "Top"</TextBlock>
+
+    <Border Height="40" Background="#3a3a3a" BorderBrush="Black" DockPanel.Dock="Bottom">
+    <TextBlock Padding="10" FontWeight="Bold" Foreground="White">Powered by DANFOSS DRIVE</TextBlock>   
     </Border>
 
-    <Border Height="40" Background="LemonChiffon" BorderBrush="Black" DockPanel.Dock="Bottom">
-    <TextBlock Foreground="Black">Powered By Danfoss Drive</TextBlock>   
-    </Border>
-
-    <Border Width="220" Background="Red" BorderBrush="Black" DockPanel.Dock="Left">
+    <Border Width="220" Background="#9C2327" BorderBrush="Black" DockPanel.Dock="Left">
     <StackPanel>
-    <MenuItem  Header="Main Page" HorizontalAlignment="Stretch" Command="{Binding NavigateToFirstView}"/>
-    <MenuItem Header="View Boiler Information" HorizontalAlignment="Stretch" Command="{Binding NavigateToBoilerInfo}"/>
-    <MenuItem Header="View Heat Demand" HorizontalAlignment="Stretch" Command="{Binding NavigateToHeatDemand}"/>
+    <Image HorizontalAlignment="Center" Margin="20" Height="100" Width="100" Source="avares://HPO/Assets/avalonia-logo.ico"/>
+    <MenuItem Header="MAIN PAGE" HorizontalAlignment="Stretch" Command="{Binding NavigateToFirstView}" Foreground="White" FontWeight="Bold" Margin="10"/>
+    <MenuItem Header="BOILER INFORMATION" HorizontalAlignment="Stretch" Command="{Binding NavigateToBoilerInfo}" Foreground="White" FontWeight="Bold" Margin="10"/>
+    <MenuItem Header="ADDITIONAL GRAPHS" HorizontalAlignment="Stretch" Command="{Binding NavigateToHeatDemand}" Foreground="White" FontWeight="Bold" Margin="10"/>
     </StackPanel>
     </Border>
 
 
-    <Border Background="White" BorderBrush="Black">
+    <Border Background="#F2F1EF" BorderBrush="Black">
     
     </Border>
     <ContentControl Content="{Binding CurrentView}" />

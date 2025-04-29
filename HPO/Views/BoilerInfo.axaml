@@ -6,7 +6,7 @@
              mc:Ignorable="d" d:DesignWidth="1800" d:DesignHeight="1200"
              x:DataType="vm:BoilerInfoViewModel"
              x:Class="HPO.Views.BoilerInfo">
-    <Grid>
+    <Grid Background="#D9D9D9">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
