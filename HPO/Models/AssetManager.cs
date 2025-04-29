@@ -92,11 +92,11 @@ public class Boiler
         Cost = ProdCostPerMWh*HeatProduced;
         return MaxHeat;
     }
-    public void sellElectricity(){
+    public void sellElectricity(double elprice){
         ElecProduced = MaxElectricity;
         CO2Produced = CO2EmissionPerMWh*ElecProduced;
         Consumed = ConsumptionPerMWh*ElecProduced;
-        Cost = -ProdCostPerMWh*ElecProduced;
+        Cost = elprice*ElecProduced - ProdCostPerMWh*ElecProduced;
     }
 
     public Boiler(string name, BoilerType boilerType, float maxHeat, float prodCost, float co2Emission, float consumption, double maxElectricity)
