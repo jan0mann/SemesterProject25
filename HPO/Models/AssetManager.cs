@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using LiveChartsCore.SkiaSharpView.Drawing.Layouts;
 
 namespace HPO.Models;
 
@@ -75,26 +76,30 @@ public class Boiler
     public double CO2Produced {get;set;}
     public double Consumed {get; set;}
     public double Cost {get;set;}
-
+    public double MaxElectricity {get; set;}
+    public double ElecProduced {get; set;}
     public BoilerType BoilerType {get; private set;}
 
     public double requestProduction(double necessaryHeat){
         if(necessaryHeat > MaxHeat){
             HeatProduced = MaxHeat;
-            CO2Produced = CO2EmissionPerMWh*HeatProduced;
-            Consumed = ConsumptionPerMWh*HeatProduced;
-            Cost = ProdCostPerMWh*HeatProduced;
-            return MaxHeat; 
         }else{
             HeatProduced = necessaryHeat;
-            CO2Produced = CO2EmissionPerMWh*HeatProduced;
-            Consumed = ConsumptionPerMWh*HeatProduced;
-            Cost = ProdCostPerMWh*HeatProduced;
-            return necessaryHeat;
         }
+
+        CO2Produced = CO2EmissionPerMWh*HeatProduced;
+        Consumed = ConsumptionPerMWh*HeatProduced;
+        Cost = ProdCostPerMWh*HeatProduced;
+        return MaxHeat;
+    }
+    public void sellElectricity(){
+        ElecProduced = MaxElectricity;
+        CO2Produced = CO2EmissionPerMWh*ElecProduced;
+        Consumed = ConsumptionPerMWh*ElecProduced;
+        Cost = -ProdCostPerMWh*ElecProduced;
     }
 
-    public Boiler(string name, BoilerType boilerType, float maxHeat, float prodCost, float co2Emission, float consumption)
+    public Boiler(string name, BoilerType boilerType, float maxHeat, float prodCost, float co2Emission, float consumption, double maxElectricity)
     {
         Name = name;
         BoilerType = boilerType;
@@ -106,24 +111,26 @@ public class Boiler
         CO2Produced = 0.0;
         Consumed = 0.0;
         Cost = 0.0;
+        MaxElectricity = maxElectricity;
+        ElecProduced = 0.0;
     }
 
     //only for testing purposes
-    public Boiler(string name, BoilerType boilerType, float maxHeat, float prodCost, float co2Emission, float consumption, double heatProduced)
-    {
-        Name = name;
-        BoilerType = boilerType;
-        MaxHeat = maxHeat;
-        ProdCostPerMWh = prodCost;
-        CO2EmissionPerMWh = co2Emission;
-        ConsumptionPerMWh = consumption;
-        HeatProduced = heatProduced;
-        CO2Produced = 0.0;
-        Consumed = 0.0;
-        Cost = 0.0;
-    }
+    // public Boiler(string name, BoilerType boilerType, float maxHeat, float prodCost, float co2Emission, float consumption, double heatProduced)
+    // {
+    //     Name = name;
+    //     BoilerType = boilerType;
+    //     MaxHeat = maxHeat;
+    //     ProdCostPerMWh = prodCost;
+    //     CO2EmissionPerMWh = co2Emission;
+    //     ConsumptionPerMWh = consumption;
+    //     HeatProduced = heatProduced;
+    //     CO2Produced = 0.0;
+    //     Consumed = 0.0;
+    //     Cost = 0.0;
+    // }
 
     public Boiler Deepcopy(){
-        return new Boiler(Name, BoilerType, MaxHeat, ProdCostPerMWh, CO2EmissionPerMWh, ConsumptionPerMWh);
+        return new Boiler(Name, BoilerType, MaxHeat, ProdCostPerMWh, CO2EmissionPerMWh, ConsumptionPerMWh, MaxElectricity);
     }
 }
