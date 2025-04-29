@@ -16,25 +16,20 @@
     <StackPanel Background="#D9D9D9">
     <TabControl>
       <TabItem Header="Winter" Foreground="Black" Background="#D9D9D9">
-        <Grid>
-          <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-          </Grid.RowDefinitions>
-          
-          <StackPanel Grid.Row="0" Margin="0" HorizontalAlignment="Center">
+        <Grid RowDefinitions="Auto,Auto,Auto">
+        
+        <StackPanel Grid.Row="0" Margin="0" HorizontalAlignment="Center">
             <TextBlock Text="March 2024" Foreground="Black" FontSize="16" Margin="0,0,0,10" HorizontalAlignment="Center"/>
             <ComboBox Width="200" HorizontalAlignment="Center" ItemsSource="{Binding WinterDays}" SelectedItem="{Binding SelectedWinterDay}"/>
-         
-          <lvc:CartesianChart Grid.Row="1" Series="{Binding WinterSeries}" YAxes="{Binding HeatDemandYAxes}" XAxes="{Binding XAxes}" Height="600"></lvc:CartesianChart>
-           </StackPanel>
+        </StackPanel> 
+        <lvc:CartesianChart Grid.Row="1" Series="{Binding WinterSeries}" YAxes="{Binding HeatDemandYAxes}" XAxes="{Binding XAxes}" Height="600"></lvc:CartesianChart>
+        
+
         </Grid>
       </TabItem>
 
       <TabItem Header="Summer" Foreground="Black" Background="#D9D9D9">
-        <Grid>
-          <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-          </Grid.RowDefinitions>
+        <Grid RowDefinitions="Auto,Auto,Auto">
           
           <StackPanel Grid.Row="0" Margin="10" HorizontalAlignment="Center">
             <TextBlock Text="August 2024" Foreground="Black" FontSize="16" Margin="0,0,0,10" HorizontalAlignment="Center"/>
