@@ -14,23 +14,27 @@
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <SplitView Background="#D9D9D9" IsPaneOpen="{Binding IsPaneOpen}" 
-               DisplayMode="CompactOverlay"
-               OpenPaneLength="300" CompactPaneLength="90"
-               PaneBackground="#D9D9D9">
-        <SplitView.Pane>
-            <StackPanel>
-            <Button Content = "&#x2630;" Margin="20" Padding="-10" Foreground="#D9D9D9" Background="#4682B4" Grid.Row="0" Grid.Column="0" FontSize="32" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" Height="40" Width="50" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                <Button.Flyout>
-                    <MenuFlyout Placement = "Bottom">
-                        <MenuItem  Header="Main Page" HorizontalAlignment="Stretch" Command="{Binding NavigateToFirstView}"/>
-                        <MenuItem Header="View Boiler Information" HorizontalAlignment="Stretch" Command="{Binding NavigateToBoilerInfo}"/>
-                        <MenuItem Header="View Heat Demand" HorizontalAlignment="Stretch" Command="{Binding NavigateToHeatDemand}"/>              
-                    </MenuFlyout>
-                </Button.Flyout>    
-            </Button> 
-            </StackPanel>
-        </SplitView.Pane>
-        <ContentControl Content="{Binding CurrentView}" />
-    </SplitView>
+<DockPanel LastChildFill="True">
+    <Border Height="60" Background="SkyBlue" BorderBrush="Black" DockPanel.Dock="Top">
+    <TextBlock Foreground="Black">Dock = "Top"</TextBlock>
+    </Border>
+
+    <Border Height="40" Background="LemonChiffon" BorderBrush="Black" DockPanel.Dock="Bottom">
+    <TextBlock Foreground="Black">Powered By Danfoss Drive</TextBlock>   
+    </Border>
+
+    <Border Width="220" Background="Red" BorderBrush="Black" DockPanel.Dock="Left">
+    <StackPanel>
+    <MenuItem  Header="Main Page" HorizontalAlignment="Stretch" Command="{Binding NavigateToFirstView}"/>
+    <MenuItem Header="View Boiler Information" HorizontalAlignment="Stretch" Command="{Binding NavigateToBoilerInfo}"/>
+    <MenuItem Header="View Heat Demand" HorizontalAlignment="Stretch" Command="{Binding NavigateToHeatDemand}"/>
+    </StackPanel>
+    </Border>
+
+
+    <Border Background="White" BorderBrush="Black">
+    
+    </Border>
+    <ContentControl Content="{Binding CurrentView}" />
+</DockPanel>
 </Window>
