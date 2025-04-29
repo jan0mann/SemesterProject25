@@ -16,7 +16,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private bool isPaneOpen = false;
 
-    private FirstView _firstView = new FirstView { DataContext = new FirstViewModel() };
+    private FirstView _firstView = new FirstView { DataContext = new HeatDemandViewModel() };
     private BoilerInfo _secondView = new BoilerInfo { DataContext = new BoilerInfoViewModel() };
     private HeatDemand _thirdView = new HeatDemand { DataContext = new HeatDemandViewModel() };
 
