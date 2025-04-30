@@ -37,7 +37,7 @@ namespace HPO.Optimizer
     {
         public List<Boiler> calculateEfficiency(List<Boiler> boilers, double elprice)
         {
-            boilers.Find(x => x.BoilerType == BoilerType.HeatPump).ProdCostPerMWh = (float)elprice+60f;
+            boilers.Find(x => x.BoilerType == BoilerType.HeatPump).ProdCostPerMWh = elprice+60f;
             var boi = boilers.OrderBy(x => x.ProdCostPerMWh).ToList();
             return boi;
         }

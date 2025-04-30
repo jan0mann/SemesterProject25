@@ -68,10 +68,10 @@ public enum BoilerType{
 public class Boiler
 {
     public string Name { get; set; }
-    public float MaxHeat { get; set; }
-    public float ProdCostPerMWh { get; set; }
-    public float CO2EmissionPerMWh { get; set; }
-    public float ConsumptionPerMWh { get; set; }
+    public double MaxHeat { get; set; }
+    public double ProdCostPerMWh { get; set; }
+    public double CO2EmissionPerMWh { get; set; }
+    public double ConsumptionPerMWh { get; set; }
     public double HeatProduced {get; set;} // used only for calculations in optimizer
     public double CO2Produced {get;set;}
     public double Consumed {get; set;}
@@ -99,7 +99,7 @@ public class Boiler
         Cost = elprice*ElecProduced - ProdCostPerMWh*ElecProduced;
     }
 
-    public Boiler(string name, BoilerType boilerType, float maxHeat, float prodCost, float co2Emission, float consumption, double maxElectricity)
+    public Boiler(string name, BoilerType boilerType, double maxHeat, double prodCost, double co2Emission, double consumption, double maxElectricity)
     {
         Name = name;
         BoilerType = boilerType;
@@ -114,21 +114,6 @@ public class Boiler
         MaxElectricity = maxElectricity;
         ElecProduced = 0.0;
     }
-
-    //only for testing purposes
-    // public Boiler(string name, BoilerType boilerType, float maxHeat, float prodCost, float co2Emission, float consumption, double heatProduced)
-    // {
-    //     Name = name;
-    //     BoilerType = boilerType;
-    //     MaxHeat = maxHeat;
-    //     ProdCostPerMWh = prodCost;
-    //     CO2EmissionPerMWh = co2Emission;
-    //     ConsumptionPerMWh = consumption;
-    //     HeatProduced = heatProduced;
-    //     CO2Produced = 0.0;
-    //     Consumed = 0.0;
-    //     Cost = 0.0;
-    // }
 
     public Boiler Deepcopy(){
         return new Boiler(Name, BoilerType, MaxHeat, ProdCostPerMWh, CO2EmissionPerMWh, ConsumptionPerMWh, MaxElectricity);
