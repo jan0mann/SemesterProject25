@@ -437,17 +437,35 @@ public partial class HeatDemandViewModel : ViewModelBase
     }
 
 
-    private void ResultDataManager(Dictionary<int, List<Optimizer.hourData>> optimizedData)
+  private void ResultDataManager(Dictionary<int, List<Optimizer.hourData>> optimizedData)
 {
-    // Define output folder path
+    // Define and verify output folder path
     string outputDirectory = Path.Combine(AppContext.BaseDirectory, "ResultData");
-    // Ensure directory exists
-    Directory.CreateDirectory(outputDirectory);
 
-    // Create a dictionary to hold boiler-specific data
+    try
+    {
+        Directory.CreateDirectory(outputDirectory);
+        Console.WriteLine($"[INFO] Output directory ensured at: {outputDirectory}");
+    }
+    catch (Exception dirEx)
+    {
+        Console.WriteLine($"[ERROR] Failed to create output directory: {dirEx.Message}");
+        return;
+    }
+
+    // Check if data is present
+    if (optimizedData == null || optimizedData.Count == 0)
+    {
+        Console.WriteLine("[WARNING] Optimized data is null or empty.");
+        return;
+    }
+
+    // Dictionary to hold per-boiler data
     var boilerData = new Dictionary<string, List<string>>();
 
-    // Collect data per boiler
+    Console.WriteLine($"[INFO] Processing result data for {optimizedData.Count} days...");
+
+    // Process data
     foreach (var dayEntry in optimizedData)
     {
         int day = dayEntry.Key;
@@ -456,29 +474,54 @@ public partial class HeatDemandViewModel : ViewModelBase
         for (int hourIndex = 0; hourIndex < hours.Count; hourIndex++)
         {
             var hourData = hours[hourIndex];
+            if (hourData.Boilers == null || hourData.Boilers.Count == 0)
+            {
+                Console.WriteLine($"[WARNING] No boiler data found for Day {day}, Hour {hourIndex}");
+                continue;
+            }
 
             foreach (var boiler in hourData.Boilers)
             {
                 if (!boilerData.ContainsKey(boiler.Name))
                 {
-                    boilerData[boiler.Name] = new List<string>();
-                    // Add header line
-                    boilerData[boiler.Name].Add("Day,Hour,HeatProduced,CO2Produced,Cost");
+                    boilerData[boiler.Name] = new List<string>
+                    {
+                        "Day,Hour,HeatProduced,ElectricityProduced,Cost,PrimaryEnergyConsumed,CO2Produced"
+                    };
                 }
-                boilerData[boiler.Name].Add($"{day},{hourIndex},{boiler.HeatProduced},{boiler.CO2Produced},{boiler.Cost}");
+
+                string line = $"{day},{hourIndex}," +
+                              $"{boiler.HeatProduced}," +
+                              $"{boiler.ElecProduced}," +
+                              //$"{boiler.ElectricityConsumed}," +
+                              $"{boiler.Cost}," +
+                              $"{boiler.Consumed}," +
+                              $"{boiler.CO2Produced}";
+
+                boilerData[boiler.Name].Add(line);
             }
         }
     }
 
-    // Write data to CSV files
+    Console.WriteLine($"[INFO] Writing data for {boilerData.Count} boilers...");
+
+    // Write data to CSV
     foreach (var boilerEntry in boilerData)
     {
         string sanitizedBoilerName = boilerEntry.Key.Replace(" ", "_").Replace("/", "_");
-        string filePath = Path.Combine(outputDirectory, $"{sanitizedBoilerName}.csv");
+        string filePath = Path.Combine(outputDirectory, $"C:/Persønliches/Desktop/SemProject25/SemesterProject25/HPO/ResultData/DATA.csv");
 
-        File.WriteAllLines(filePath, boilerEntry.Value);
+        try
+        {
+            File.WriteAllLines(filePath, boilerEntry.Value);
+            Console.WriteLine($"[SUCCESS] Data written for boiler: {boilerEntry.Key} -> {filePath}");
+        }
+        catch (Exception fileEx)
+        {
+            Console.WriteLine($"[ERROR] Failed to write file for boiler {boilerEntry.Key}: {fileEx.Message}");
+        }
     }
+
+    Console.WriteLine("[INFO] Result data export complete.");
 }
-
-
 }
