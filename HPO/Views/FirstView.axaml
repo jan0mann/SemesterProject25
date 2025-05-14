@@ -9,10 +9,6 @@
              xmlns:local="using:AvaloniaSample"
              xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
              xmlns:vms="using:HPO.ViewModels">
-            
-     <UserControl.DataContext>
-        <vm:HeatDemandViewModel/>
-    </UserControl.DataContext>
     
   <DockPanel LastChildFill="True">
       <Border Width="300" Background="#D9D9D9" BorderBrush="Black" DockPanel.Dock="Left">

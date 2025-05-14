@@ -26,6 +26,8 @@
     <MenuItem Header="MAIN PAGE" HorizontalAlignment="Stretch" Command="{Binding NavigateToFirstView}" Foreground="White" FontWeight="Bold" Margin="10"/>
     <MenuItem Header="BOILER INFORMATION" HorizontalAlignment="Stretch" Command="{Binding NavigateToBoilerInfo}" Foreground="White" FontWeight="Bold" Margin="10"/>
     <MenuItem Header="ADDITIONAL GRAPHS" HorizontalAlignment="Stretch" Command="{Binding NavigateToHeatDemand}" Foreground="White" FontWeight="Bold" Margin="10"/>
+    <Button Content="Scenario 1" Command="{Binding ShowScenario1Command}" Margin="0,0,10,0"/>
+    <Button Content="Scenario 2" Command="{Binding ShowScenario2Command}"/>
     </StackPanel>
     </Border>
 
@@ -36,3 +38,4 @@
     <ContentControl Content="{Binding CurrentView}" />
 </DockPanel>
 </Window>
+
