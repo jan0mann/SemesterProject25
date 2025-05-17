@@ -17,7 +17,7 @@
 <DockPanel LastChildFill="True">
 
     <Border Height="40" Background="#3a3a3a" BorderBrush="Black" DockPanel.Dock="Bottom">
-    <TextBlock Padding="10" FontWeight="Bold" Foreground="White">Powered by DANFOSS DRIVE</TextBlock>   
+    <TextBlock Text="Powered by DANFOSS DRIVE" Padding="10" FontWeight="Bold" HorizontalAlignment="Left" Foreground="White"/>   
     </Border>
 
     <Border Width="220" Background="#9C2327" BorderBrush="Black" DockPanel.Dock="Left">
@@ -26,6 +26,19 @@
     <MenuItem Header="MAIN PAGE" HorizontalAlignment="Stretch" Command="{Binding NavigateToFirstView}" Foreground="White" FontWeight="Bold" Margin="10"/>
     <MenuItem Header="BOILER INFORMATION" HorizontalAlignment="Stretch" Command="{Binding NavigateToBoilerInfo}" Foreground="White" FontWeight="Bold" Margin="10"/>
     <MenuItem Header="ADDITIONAL GRAPHS" HorizontalAlignment="Stretch" Command="{Binding NavigateToHeatDemand}" Foreground="White" FontWeight="Bold" Margin="10"/>
+    
+    <Canvas Background="Red">
+    <StackPanel>
+    <TextBlock Text="CHOOSE THE SCENARIO:" Foreground="White" HorizontalAlignment="Stretch" Margin="22 13 0 0" FontWeight="Bold"/>
+    <TextBlock Margin="22 10 0 0" Foreground="White" xml:space="preserve">Scenario 1:
+GB1, GB2 and OB1</TextBlock>
+    <Button Content=" Scenario 1 " Command="{Binding ShowScenario1Command}"  Background="#F2F1EF" HorizontalAlignment="Center" Margin="0 10 0 0"/>
+    <TextBlock Margin="22 10 0 0" Foreground="White" xml:space="preserve">Scenario 2:
+GB1, OB1, GM1 and HP1</TextBlock>
+    <Button Content=" Scenario 2 " Command="{Binding ShowScenario2Command}"  Background="#F2F1EF" HorizontalAlignment="Center" Margin="0 10 0 0"/>
+    </StackPanel>
+    </Canvas>
+
     </StackPanel>
     </Border>
 
@@ -36,3 +49,4 @@
     <ContentControl Content="{Binding CurrentView}" />
 </DockPanel>
 </Window>
+
