@@ -30,6 +30,15 @@ public partial class HeatDemandViewModel : ViewModelBase
     [ObservableProperty]
     private ISeries[] winterCostCO2Series;
 
+    [ObservableProperty]
+    private ISeries[] summerEPriceSeries;
+
+    [ObservableProperty]
+    private ISeries[] winterEPriceSeries;
+
+    [ObservableProperty]
+    private ISeries[] electricityProductionSeries;
+
     private int _selectedSummerDay;
     public int SelectedSummerDay
     {
@@ -223,7 +232,10 @@ public partial class HeatDemandViewModel : ViewModelBase
             }
         }
 
+
         return heatDemandData;
+
+
     }
 
     public Dictionary<int, List<(double, double)>> GetSummerHeatDemandData1()
@@ -299,13 +311,14 @@ public partial class HeatDemandViewModel : ViewModelBase
     }
 
     private void UpdateGraph(
-        Dictionary<int, List<(double, double)>> heatDemandDataDict,
-        Dictionary<int, List<Optimizer.hourData>> optimizedDataDict,
-        int selectedDay,
-        Action<ISeries[]> setSeries,
-        Action<ISeries[]> setCostCO2Series,
-        string demandSeriesName,
-        ObservableCollection<Boiler> scenarioBoilers)
+    Dictionary<int, List<(double, double)>> heatDemandDataDict,
+    Dictionary<int, List<Optimizer.hourData>> optimizedDataDict,
+    int selectedDay,
+    Action<ISeries[]> setSeries,
+    Action<ISeries[]> setCostCO2Series,
+    Action<ISeries[]> setPriceSeries,
+    string demandSeriesName,
+    ObservableCollection<Boiler> scenarioBoilers)
     {
         if (heatDemandDataDict.ContainsKey(selectedDay))
         {
@@ -333,6 +346,7 @@ public partial class HeatDemandViewModel : ViewModelBase
 
             var seriesList = new List<ISeries>();
             var costCO2SeriesList = new List<ISeries>();
+            var epriceseriesList = new List<ISeries>();
 
             foreach (var boiler in filteredBoilersData)
             {
@@ -354,9 +368,11 @@ public partial class HeatDemandViewModel : ViewModelBase
             }
 
             List<double> heatDemandData2 = new();
+            List<double> priceData = new();
             foreach (var hour in heatDemandData)
             {
                 heatDemandData2.Add(hour.Item1);
+                priceData.Add(hour.Item2);
             }
             seriesList.Add(
                 new LineSeries<double>
@@ -376,6 +392,7 @@ public partial class HeatDemandViewModel : ViewModelBase
 
             List<double> summedCO2 = new();
             List<double> summedCost = new();
+
             foreach (var hour in hoursData)
             {
                 double sumCO2 = 0;
@@ -410,8 +427,25 @@ public partial class HeatDemandViewModel : ViewModelBase
                     Name = "Cost(DKK)"
                 });
 
+
+            epriceseriesList.Add(
+                new LineSeries<double>
+                {
+                    Values = priceData.ToArray(),
+                    GeometrySize = 0,
+                    LineSmoothness = 0,
+                    Stroke = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
+                    {
+                        Color = new SkiaSharp.SKColor(255, 0, 255), // Magenta
+                        StrokeThickness = 3
+                    },
+                    Fill = null,
+                    Name = "Electricity Price (DKK)"
+                }
+            );
             setSeries(seriesList.ToArray());
             setCostCO2Series(costCO2SeriesList.ToArray());
+            setPriceSeries(epriceseriesList.ToArray());
         }
     }
 
@@ -424,6 +458,7 @@ public partial class HeatDemandViewModel : ViewModelBase
             SelectedSummerDay,
             series => SummerSeries = series,
             series => SummerCostCO2Series = series,
+            series => SummerEPriceSeries = series,
             "Heat Demand",
             _boilersScenario1
         );
@@ -438,6 +473,7 @@ public partial class HeatDemandViewModel : ViewModelBase
             SelectedSummerDay,
             series => SummerSeries = series,
             series => SummerCostCO2Series = series,
+            series => SummerEPriceSeries = series,
             "Heat Demand",
             _boilersScenario2
         );
@@ -452,6 +488,7 @@ public partial class HeatDemandViewModel : ViewModelBase
             SelectedWinterDay,
             series => WinterSeries = series,
             series => WinterCostCO2Series = series,
+            series => WinterEPriceSeries = series,
             "Heat Demand",
             _boilersScenario1
         );
@@ -466,10 +503,11 @@ public partial class HeatDemandViewModel : ViewModelBase
             SelectedWinterDay,
             series => WinterSeries = series,
             series => WinterCostCO2Series = series,
+            series => WinterEPriceSeries = series,
             "Heat Demand",
             _boilersScenario2
         );
-
+    
     }
 
     private void UpdateSummerGraphByScenario()
@@ -487,6 +525,8 @@ public partial class HeatDemandViewModel : ViewModelBase
         else
             UpdateWinterGraphScenario2();
     }
+
+
 
     private void ResultDataManager(Dictionary<int, List<Optimizer.hourData>> optimizedData)
     {
