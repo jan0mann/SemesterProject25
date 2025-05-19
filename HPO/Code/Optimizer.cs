@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using HPO.Models;
 using HPO.Views;
+using LiveChartsCore.VisualElements;
 
 namespace HPO.Optimizer
 {

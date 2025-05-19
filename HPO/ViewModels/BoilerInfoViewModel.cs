@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HPO.Models;
+using LiveChartsCore.VisualElements;
 
 namespace HPO.ViewModels
 {
