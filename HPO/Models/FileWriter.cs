@@ -15,7 +15,7 @@ public class FileWriter
 
     public void WriteResults<T>(IEnumerable<T> results)
     {
-        // Get the user's Downloads folder
+        // Get the user's Downloads folder works on all OS with a folder in UserProfile named "Downloads"
         string downloadsPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
             "Downloads"
