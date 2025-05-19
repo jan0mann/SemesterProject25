@@ -392,6 +392,16 @@ public partial class HeatDemandViewModel : ViewModelBase
 
             List<double> summedCO2 = new();
             List<double> summedCost = new();
+            List<double> preOptCostList = new();
+
+            foreach (var hour in heatDemandData)
+            {
+                double demand = hour.Item1;
+                // Example: use the most expensive boiler for this scenario
+                double avgProdCost = scenarioBoilers.Average(b => b.ProdCostPerMWh);
+                double preOptCost = demand * avgProdCost;
+                preOptCostList.Add(Math.Round(preOptCost));
+            }
 
             foreach (var hour in hoursData)
             {
@@ -443,6 +453,19 @@ public partial class HeatDemandViewModel : ViewModelBase
                     Name = "Electricity Price (DKK)"
                 }
             );
+            costCO2SeriesList.Add(
+    new LineSeries<double>
+    {
+        Values = preOptCostList,
+        LineSmoothness = 0,
+        Stroke = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
+        {
+            Color = new SkiaSharp.SKColor(255, 128, 0), // Orange
+            StrokeThickness = 3
+        },
+        Fill = null,
+        Name = "Cost Before Optimization (DKK)"
+    });
             setSeries(seriesList.ToArray());
             setCostCO2Series(costCO2SeriesList.ToArray());
             setPriceSeries(epriceseriesList.ToArray());
@@ -507,7 +530,7 @@ public partial class HeatDemandViewModel : ViewModelBase
             "Heat Demand",
             _boilersScenario2
         );
-    
+
     }
 
     private void UpdateSummerGraphByScenario()
@@ -525,6 +548,8 @@ public partial class HeatDemandViewModel : ViewModelBase
         else
             UpdateWinterGraphScenario2();
     }
+
+    
 
 
 
