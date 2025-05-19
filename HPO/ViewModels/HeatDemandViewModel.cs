@@ -1,5 +1,6 @@
 using System;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.IO;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Linq;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using HPO.Models;
+using HPO.ViewModels;
 using HPO.Optimizer;
 
 namespace HPO.ViewModels;
@@ -50,6 +52,18 @@ public partial class HeatDemandViewModel : ViewModelBase
                 UpdateSummerGraphByScenario();
             }
         }
+    }
+    //RDM Commands
+    [RelayCommand]
+    private void SaveScenario1BoilerDistribution()
+    {
+        SaveScenario1BoilerDistributionToCsv();
+    }
+
+    [RelayCommand]
+    private void SaveScenario2BoilerDistribution()
+    {
+        SaveScenario2BoilerDistributionToCsv();
     }
 
     private int _selectedWinterDay;
@@ -176,10 +190,6 @@ public partial class HeatDemandViewModel : ViewModelBase
 
         UpdateWinterGraphScenario1();
         UpdateSummerGraphScenario1();
-
-
-        ResultDataManager(_winterOptimizedData);
-        ResultDataManager(_summerOptimizedData);
     }
 
     private Dictionary<int, List<(double, double)>> GetHeatDemandData<T, TData>(
@@ -192,8 +202,8 @@ public partial class HeatDemandViewModel : ViewModelBase
     bool usePrice,
     ObservableCollection<int> days,
     Dictionary<int, List<Optimizer.hourData>> optimizedDataDict,
-    ObservableCollection<Boiler> scenarioBoilers
-)
+    ObservableCollection<Boiler> scenarioBoilers)
+
     {
         var heatDemandData = new Dictionary<int, List<(double, double)>>();
 
@@ -548,51 +558,70 @@ public partial class HeatDemandViewModel : ViewModelBase
         else
             UpdateWinterGraphScenario2();
     }
-
     
+    //RDM IMPLEMENTATION STARTS HERE
 
-
-
-    private void ResultDataManager(Dictionary<int, List<Optimizer.hourData>> optimizedData)
+    private void SaveScenario1BoilerDistributionToCsv()
     {
-        // Define output folder path
-        string outputDirectory = Path.Combine(AppContext.BaseDirectory, "ResultData");
-        // Ensure directory exists
-        Directory.CreateDirectory(outputDirectory);
+        var fileWriter = new FileWriter();
+        string downloadsPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+            "Downloads",
+            "HPOBoilerDistribution_Scenario1.csv"
+        );
+        var results = GetBoilerHourResultsForScenario(_summerOptimizedData, _winterOptimizedData, "Scenario1");
+        fileWriter.WriteBoilerHourResults(results, downloadsPath);
+    }
 
-        // Create a dictionary to hold boiler-specific data
-        var boilerData = new Dictionary<string, List<string>>();
+    private void SaveScenario2BoilerDistributionToCsv()
+    {
+        var fileWriter = new FileWriter();
+        string downloadsPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+            "Downloads",
+            "HPOBoilerDistribution_Scenario2.csv"
+        );
+        var results = GetBoilerHourResultsForScenario(_summerOptimizedData2, _winterOptimizedData2, "Scenario2");
+        fileWriter.WriteBoilerHourResults(results, downloadsPath);
+    }
 
-        // Collect data per boiler
-        foreach (var dayEntry in optimizedData)
+
+    private IEnumerable<BoilerHourResult> GetBoilerHourResultsForScenario(
+        Dictionary<int, List<Optimizer.hourData>> summerData,
+        Dictionary<int, List<Optimizer.hourData>> winterData,
+        string scenarioName)
+    {
+        var results = new List<BoilerHourResult>();
+        void AddData(Dictionary<int, List<Optimizer.hourData>> data, string period)
         {
-            int day = dayEntry.Key;
-            var hours = dayEntry.Value;
-
-            for (int hourIndex = 0; hourIndex < hours.Count; hourIndex++)
+            foreach (var dayEntry in data)
             {
-                var hourData = hours[hourIndex];
-
-                foreach (var boiler in hourData.Boilers)
+                int day = dayEntry.Key;
+                var hours = dayEntry.Value;
+                for (int hourIndex = 0; hourIndex < hours.Count; hourIndex++)
                 {
-                    if (!boilerData.ContainsKey(boiler.Name))
+                    var hourData = hours[hourIndex];
+                    double demand = hourData.Demand;
+                    foreach (var boiler in hourData.Boilers)
                     {
-                        boilerData[boiler.Name] = new List<string>();
-                        // Add header line
-                        boilerData[boiler.Name].Add("Day,Hour,HeatProduced,CO2Produced,Cost");
+                        results.Add(new BoilerHourResult
+                        {
+                            Day = day,
+                            Hour = hourIndex,
+                            BoilerName = boiler.Name,
+                            HeatProduced = boiler.HeatProduced,
+                            CO2Produced = boiler.CO2Produced,
+                            Cost = boiler.Cost,
+                            Scenario = scenarioName + "_" + period,
+                            Demand = demand
+                        });
                     }
-                    boilerData[boiler.Name].Add($"{day},{hourIndex},{boiler.HeatProduced},{boiler.CO2Produced},{boiler.Cost}");
                 }
             }
         }
-
-        // Write data to CSV files
-        foreach (var boilerEntry in boilerData)
-        {
-            string sanitizedBoilerName = boilerEntry.Key.Replace(" ", "_").Replace("/", "_");
-            string filePath = Path.Combine(outputDirectory, $"{sanitizedBoilerName}.csv");
-
-            File.WriteAllLines(filePath, boilerEntry.Value);
-        }
+        AddData(summerData, "Summer");
+        AddData(winterData, "Winter");
+        return results;
     }
+    
 }
