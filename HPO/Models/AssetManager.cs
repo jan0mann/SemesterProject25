@@ -58,8 +58,7 @@ namespace HPO.Models;
 // }
 
 
-public enum BoilerType
-{
+public enum BoilerType{
     Gas,
     Oil,
     HeatPump,
@@ -68,42 +67,36 @@ public enum BoilerType
 
 public class Boiler
 {
-    public string ConsumptionPerMWhDisplay => ConsumptionPerMWh.ToString("F2");
     public string Name { get; set; }
     public double MaxHeat { get; set; }
     public double ProdCostPerMWh { get; set; }
     public double CO2EmissionPerMWh { get; set; }
     public double ConsumptionPerMWh { get; set; }
-    public double HeatProduced { get; set; } // used only for calculations in optimizer
-    public double CO2Produced { get; set; }
-    public double Consumed { get; set; }
-    public double Cost { get; set; }
-    public double MaxElectricity { get; set; }
-    public double ElecProduced { get; set; }
-    public BoilerType BoilerType { get; private set; }
+    public double HeatProduced {get; set;} // used only for calculations in optimizer
+    public double CO2Produced {get;set;}
+    public double Consumed {get; set;}
+    public double Cost {get;set;}
+    public double MaxElectricity {get; set;}
+    public double ElecProduced {get; set;}
+    public BoilerType BoilerType {get; private set;}
 
-    public double requestProduction(double necessaryHeat)
-    {
-        if (necessaryHeat > MaxHeat)
-        {
+    public double requestProduction(double necessaryHeat){
+        if(necessaryHeat > MaxHeat){
             HeatProduced = MaxHeat;
-        }
-        else
-        {
+        }else{
             HeatProduced = necessaryHeat;
         }
 
-        CO2Produced = CO2EmissionPerMWh * HeatProduced;
-        Consumed = ConsumptionPerMWh * HeatProduced;
-        Cost = ProdCostPerMWh * HeatProduced;
+        CO2Produced = CO2EmissionPerMWh*HeatProduced;
+        Consumed = ConsumptionPerMWh*HeatProduced;
+        Cost = ProdCostPerMWh*HeatProduced;
         return MaxHeat;
     }
-    public void sellElectricity(double elprice)
-    {
+    public void sellElectricity(double elprice){
         ElecProduced = MaxElectricity;
-        CO2Produced = CO2EmissionPerMWh * ElecProduced;
-        Consumed = ConsumptionPerMWh * ElecProduced;
-        Cost = elprice * ElecProduced - ProdCostPerMWh * ElecProduced;
+        CO2Produced = CO2EmissionPerMWh*ElecProduced;
+        Consumed = ConsumptionPerMWh*ElecProduced;
+        Cost = elprice*ElecProduced - ProdCostPerMWh*ElecProduced;
     }
 
     public Boiler(string name, BoilerType boilerType, double maxHeat, double prodCost, double co2Emission, double consumption, double maxElectricity)
@@ -122,9 +115,7 @@ public class Boiler
         ElecProduced = 0.0;
     }
 
-    public Boiler Deepcopy()
-    {
+    public Boiler Deepcopy(){
         return new Boiler(Name, BoilerType, MaxHeat, ProdCostPerMWh, CO2EmissionPerMWh, ConsumptionPerMWh, MaxElectricity);
     }
-
 }
