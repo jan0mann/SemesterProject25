@@ -16,48 +16,34 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private bool isPaneOpen = false;
 
-    public HeatDemandViewModel HeatDemandViewModel { get; }
-    public BoilerInfoViewModel BoilerInfoViewModel { get; }
-
-    private FirstView _firstView;
-    private BoilerInfo _secondView;
-    private HeatDemand _thirdView;
+    private FirstView _firstView = new FirstView { DataContext = new HeatDemandViewModel() };
+    private BoilerInfo _secondView = new BoilerInfo { DataContext = new BoilerInfoViewModel() };
+    private HeatDemand _thirdView = new HeatDemand { DataContext = new HeatDemandViewModel() };
 
     public MainWindowViewModel()
     {
+        CurrentView = _firstView;
         HeatDemandViewModel = new HeatDemandViewModel();
-        BoilerInfoViewModel = new BoilerInfoViewModel();
+    }
 
-        _firstView = new FirstView { DataContext = HeatDemandViewModel };
-        _secondView = new BoilerInfo { DataContext = BoilerInfoViewModel };
-        _thirdView = new HeatDemand { DataContext = HeatDemandViewModel };
-
+    [RelayCommand]
+    public void NavigateToFirstView()
+    {
         CurrentView = _firstView;
     }
 
     [RelayCommand]
-    public void NavigateToFirstView() => CurrentView = _firstView;
-
-    [RelayCommand]
-    public void NavigateToBoilerInfo() => CurrentView = _secondView;
-
-    [RelayCommand]
-    public void NavigateToHeatDemand() => CurrentView = _thirdView;
-
-    // SCENARIO COMMANDS
-    [RelayCommand]
-    public void ShowScenario1()
+    public void NavigateToBoilerInfo()
     {
-        HeatDemandViewModel.CurrentSummerScenario = 1;
-        HeatDemandViewModel.CurrentWinterScenario = 1;
-        BoilerInfoViewModel.ShowScenario1Command.Execute(null);
+        CurrentView = _secondView;
     }
 
     [RelayCommand]
-    public void ShowScenario2()
+    public void NavigateToHeatDemand()
     {
-        HeatDemandViewModel.CurrentSummerScenario = 2;
-        HeatDemandViewModel.CurrentWinterScenario = 2;
-        BoilerInfoViewModel.ShowScenario2Command.Execute(null);
+        CurrentView = _thirdView;
     }
+
+    public HeatDemandViewModel HeatDemandViewModel { get; }
 }
+

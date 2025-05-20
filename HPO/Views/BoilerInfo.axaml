@@ -8,16 +8,18 @@
              x:Class="HPO.Views.BoilerInfo">
     <Grid Background="#D9D9D9">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-
-        <!-- Boilers title and list, higher up -->
-        <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,40,0,0">
-            <TextBlock Text="Boilers" Foreground="Black" FontWeight="Bold" FontSize="32" Margin="0,0,0,20" HorizontalAlignment="Center"/>
+        
+        
+        <StackPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center">    
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center">
+            <TextBlock Text="Boilers" Foreground="Black" FontWeight="Bold" FontSize="32" Margin="0,20,0,20" HorizontalAlignment="Center"/>
             <ListBox ItemsSource="{Binding Boilers}" Width="800" CornerRadius="10" Background="#ffffff" IsHitTestVisible="False">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -28,12 +30,13 @@
                                 <TextBlock Text="{Binding MaxHeat, StringFormat='Max heat: {0} MW'}" FontSize="14" Margin="0,0,0,10" Foreground="Black"/>
                                 <TextBlock Text="{Binding ProdCostPerMWh, StringFormat='Production costs: {0} DKK / MWh(th)'}" FontSize="14" Margin="0,0,0,10" Foreground="Black"/>
                                 <TextBlock Text="{Binding CO2EmissionPerMWh, StringFormat='CO2 emissions: {0} kg / MWh(th)'}" FontSize="14" Margin="0,0,0,10" Foreground="Black"/>
-                                <TextBlock Text="{Binding ConsumptionPerMWhDisplay, StringFormat='Gas consumption: {0} MWh(gas) / MWh(th)'}" FontSize="14" Margin="0,0,0,10" Foreground="Black"/>
+                                <TextBlock Text="{Binding ConsumptionPerMWh, StringFormat='Gas consumption: {0} MWh(gas) / MWh(th)'}" FontSize="14" Margin="0,0,0,10" Foreground="Black"/>
                             </StackPanel>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </StackPanel>
+        
     </Grid>
 </UserControl>

@@ -1,15 +1,12 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using HPO.Models;
-using LiveChartsCore.VisualElements;
 
 namespace HPO.ViewModels
 {
     public partial class BoilerInfoViewModel : ViewModelBase
     {
         private ObservableCollection<Boiler> _Boilers;
-        private readonly AssetManager assetManager = new AssetManager();
 
         public ObservableCollection<Boiler> Boilers
         {
@@ -17,25 +14,16 @@ namespace HPO.ViewModels
             set { SetProperty(ref _Boilers, value); }
         }
 
-        public IRelayCommand ShowScenario1Command { get; }
-        public IRelayCommand ShowScenario2Command { get; }
-
         public BoilerInfoViewModel()
         {
             Boilers = new ObservableCollection<Boiler>();
-            ShowScenario1Command = new RelayCommand(ShowScenario1);
-            ShowScenario2Command = new RelayCommand(ShowScenario2);
-            ShowScenario1();
+            InitializeBoilers();
         }
 
-        private void ShowScenario1()
+        private void InitializeBoilers()
         {
-            Boilers = assetManager.ShowInfo1();
-        }
-
-        private void ShowScenario2()
-        {
-            Boilers = assetManager.ShowInfo2();
+            var assetManager = new AssetManager();
+            Boilers = assetManager.ShowInfo();
         }
     }
 }
