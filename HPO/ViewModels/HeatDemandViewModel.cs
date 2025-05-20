@@ -11,6 +11,11 @@ using LiveChartsCore.SkiaSharpView;
 using HPO.Models;
 using HPO.ViewModels;
 using HPO.Optimizer;
+<<<<<<< HEAD
+using System.Configuration.Assemblies;
+using Tmds.DBus.Protocol;
+=======
+>>>>>>> eb53b0a537a9dd067c2fd4e7691aff630803677e
 
 namespace HPO.ViewModels;
 
@@ -184,12 +189,18 @@ public partial class HeatDemandViewModel : ViewModelBase
         _winterHeatDemandData = GetWinterHeatDemandData1();
         _summerHeatDemandData = GetSummerHeatDemandData1();
 
+<<<<<<< HEAD
+        UpdateWinterGraph();
+        UpdateSummerGraph();
+        
+=======
         _winterHeatDemandData2 = GetWinterHeatDemandData2();
         _summerHeatDemandData2 = GetSummerHeatDemandData2();
 
 
         UpdateWinterGraphScenario1();
         UpdateSummerGraphScenario1();
+>>>>>>> eb53b0a537a9dd067c2fd4e7691aff630803677e
     }
 
     private Dictionary<int, List<(double, double)>> GetHeatDemandData<T, TData>(
@@ -240,6 +251,8 @@ public partial class HeatDemandViewModel : ViewModelBase
                     : optimizeWithoutPrice(scenarioBoilers.Select(x => x.Deepcopy()).ToList(), hour.Item1);
                 optimizedDataDict[day].Add(hourData);
             }
+
+            ResultDataManager.SaveBoilerResultsToCsv(_winterOptimizedData[day], "Winter", day);
         }
 
 
@@ -252,6 +265,50 @@ public partial class HeatDemandViewModel : ViewModelBase
     {
         var optimizer = new Optimizer.Optimizer1();
         var summerList = new FileReader().WriteList<Summer>();
+<<<<<<< HEAD
+
+        var summerHeatDemandData = new Dictionary<int, List<(double, double)>>();
+
+        foreach (var summer in summerList)
+        {
+            if (DateTime.TryParse(summer.STimeFrom, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime sTimeFrom) &&
+                summer.SHeatDemand.HasValue)
+            {
+                int day = sTimeFrom.Day;
+
+                if (!summerHeatDemandData.ContainsKey(day))
+                {
+                    summerHeatDemandData[day] = new List<(double, double)>();
+                }
+
+                summerHeatDemandData[day].Add((summer.SHeatDemand.Value, summer.SPrice.Value));
+            }
+        }
+
+        _summerHeatDemandData = summerHeatDemandData;
+
+        foreach (var day in SummerDays)
+        {
+            _summerOptimizedData[day] = new List<Optimizer.hourData>();
+        }
+
+        foreach (var day in _summerHeatDemandData.Keys)
+        {
+            var data = summerHeatDemandData[day];
+            _summerOptimizedData[day] = new List<Optimizer.hourData>();
+
+            foreach (var hour in data)
+            {
+                var hourdata = optimizer.OptimizeHour(_boilers.Select(x => x.Deepcopy()).ToList(), hour.Item1, hour.Item2);
+                _summerOptimizedData[day].Add(hourdata);
+            }
+
+            ResultDataManager.SaveBoilerResultsToCsv(_summerOptimizedData[day], "Summer", day);
+
+        }
+
+        return summerHeatDemandData;
+=======
         return GetHeatDemandData<Summer, Summer>(
             s => s.STimeFrom,
             s => s.SHeatDemand,
@@ -264,6 +321,7 @@ public partial class HeatDemandViewModel : ViewModelBase
             _summerOptimizedData,
             _boilersScenario1
         );
+>>>>>>> eb53b0a537a9dd067c2fd4e7691aff630803677e
     }
 
     public Dictionary<int, List<(double, double)>> GetSummerHeatDemandData2()
@@ -448,6 +506,10 @@ public partial class HeatDemandViewModel : ViewModelBase
                 });
 
 
+<<<<<<< HEAD
+
+
+=======
             epriceseriesList.Add(
                 new LineSeries<double>
                 {
@@ -624,4 +686,5 @@ public partial class HeatDemandViewModel : ViewModelBase
         return results;
     }
     
+>>>>>>> eb53b0a537a9dd067c2fd4e7691aff630803677e
 }
