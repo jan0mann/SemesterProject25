@@ -181,11 +181,11 @@ public partial class HeatDemandViewModel : ViewModelBase
     }
     private void LoadHeatDemandData()
     {
-        _winterHeatDemandData = GetWinterHeatDemandData1();
-        _summerHeatDemandData = GetSummerHeatDemandData1();
+        _winterHeatDemandData = GetHeatDemandData(1, 'w');
+        _summerHeatDemandData = GetHeatDemandData(1, 's');
 
-        _winterHeatDemandData2 = GetWinterHeatDemandData2();
-        _summerHeatDemandData2 = GetSummerHeatDemandData2();
+        _winterHeatDemandData2 = GetHeatDemandData(2, 'w');
+        _summerHeatDemandData2 = GetHeatDemandData(2, 's');
 
 
         UpdateWinterGraphScenario1();
@@ -248,17 +248,17 @@ public partial class HeatDemandViewModel : ViewModelBase
 
     }
 
-    public Dictionary<int, List<(double, double)>> GetSummerHeatDemandData1()
+    /*public Dictionary<int, List<(double, double)>> GetSummerHeatDemandData1()
     {
-        var optimizer = new Optimizer.Optimizer1();
+        var optimizer = new Optimizer.Optimizer();
         var summerList = new FileReader().WriteList<Summer>();
         return GetHeatDemandData<Summer, Summer>(
             s => s.STimeFrom,
             s => s.SHeatDemand,
             s => s.SPrice,
             summerList,
-            (boilers, demand, price) => optimizer.OptimizeHour(boilers, demand),
-            (boilers, demand) => optimizer.OptimizeHour(boilers, demand),
+            (boilers, demand, price) => optimizer.OptimizeHour(boilers, demand, 0),
+            (boilers, demand) => optimizer.OptimizeHour(boilers, demand, 0),
             false,
             SummerDays,
             _summerOptimizedData,
@@ -268,7 +268,7 @@ public partial class HeatDemandViewModel : ViewModelBase
 
     public Dictionary<int, List<(double, double)>> GetSummerHeatDemandData2()
     {
-        var optimizer = new Optimizer.Optimizer2();
+        var optimizer = new Optimizer.Optimizer();
         var summerList = new FileReader().WriteList<Summer>();
         return GetHeatDemandData<Summer, Summer>(
             s => s.STimeFrom,
@@ -282,19 +282,55 @@ public partial class HeatDemandViewModel : ViewModelBase
             _summerOptimizedData2,
             _boilersScenario2
         );
-    }
+    }*/
 
-    public Dictionary<int, List<(double, double)>> GetWinterHeatDemandData1()
+    /*
+        public Dictionary<int, List<(double, double)>> GetSummerHeatDemandData(int scenario)
+        {
+            var optimizer = new Optimizer.Optimizer();
+            var summerList = new FileReader().WriteList<Summer>();
+            Dictionary<int, List<hourData>> summerOptimizerData;
+            ObservableCollection<Boiler> boilers;
+            bool arg;
+            if (scenario == 1)
+            {
+                summerOptimizerData = _summerOptimizedData2;
+                boilers = _boilersScenario2;
+                arg = false;
+            }
+            else
+            {
+                summerOptimizerData = _summerOptimizedData;
+                boilers = _boilersScenario1;
+                arg = true;
+            }
+
+            return GetHeatDemandData<Summer, Summer>(
+                s => s.STimeFrom,
+                s => s.SHeatDemand,
+                s => s.SPrice,
+                summerList,
+                (boilers, demand, price) => optimizer.OptimizeHour(boilers, demand, price),
+                (boilers, demand) => optimizer.OptimizeHour(boilers, demand, 0),
+                arg,
+                SummerDays,
+                summerOptimizerData,
+                boilers
+            );
+        }
+    */
+
+    /*public Dictionary<int, List<(double, double)>> GetWinterHeatDemandData1()
     {
-        var optimizer = new Optimizer.Optimizer1();
+        var optimizer = new Optimizer.Optimizer();
         var winterList = new FileReader().WriteList<Winter>();
         return GetHeatDemandData<Winter, Winter>(
             w => w.WTimeFrom,
             w => w.WHeatDemand,
             w => w.WPrice,
             winterList,
-            (boilers, demand, price) => optimizer.OptimizeHour(boilers, demand),
-            (boilers, demand) => optimizer.OptimizeHour(boilers, demand),
+            (boilers, demand, price) => optimizer.OptimizeHour(boilers, demand, 0),
+            (boilers, demand) => optimizer.OptimizeHour(boilers, demand, 0),
             false,
             WinterDays,
             _winterOptimizedData,
@@ -304,7 +340,7 @@ public partial class HeatDemandViewModel : ViewModelBase
 
     public Dictionary<int, List<(double, double)>> GetWinterHeatDemandData2()
     {
-        var optimizer = new Optimizer.Optimizer2();
+        var optimizer = new Optimizer.Optimizer();
         var winterList = new FileReader().WriteList<Winter>();
         return GetHeatDemandData<Winter, Winter>(
             w => w.WTimeFrom,
@@ -317,6 +353,53 @@ public partial class HeatDemandViewModel : ViewModelBase
             WinterDays,
             _winterOptimizedData2,
             _boilersScenario2
+        );
+    }*/
+
+    public Dictionary<int, List<(double, double)>> GetHeatDemandData(int scenario, char season)
+    {
+        var optimizer = new Optimizer.Optimizer();
+        List<Season> seasonList;
+        
+        Dictionary<int, List<hourData>> OptimizerData;
+        ObservableCollection<Boiler> boilers;
+        ObservableCollection<int> days;
+        bool arg;
+
+        if (season == 'w')
+        {
+            seasonList = new FileReader().WriteList<Winter>();
+            days = WinterDays;
+            OptimizerData = scenario == 1 ? _winterOptimizedData : _winterOptimizedData2;
+        }
+        else
+        {
+            seasonList = new FileReader().WriteList<Summer>();
+            days = SummerDays;
+            OptimizerData = scenario == 1 ? _summerOptimizedData : _summerOptimizedData2;
+        }
+        if (scenario == 1)
+        {
+            boilers = _boilersScenario2;
+            arg = false;
+        }
+        else
+        {
+            boilers = _boilersScenario1;
+            arg = true;
+        }
+
+        return GetHeatDemandData<Season, Season>(
+            s => s.TimeFrom,
+            s => s.HeatDemand,
+            s => s.Price,
+            seasonList,
+            (boilers, demand, price) => optimizer.OptimizeHour(boilers, demand, price),
+            (boilers, demand) => optimizer.OptimizeHour(boilers, demand, 0),
+            arg,
+            days,
+            OptimizerData,
+            boilers
         );
     }
 

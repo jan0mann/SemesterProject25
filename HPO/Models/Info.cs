@@ -42,3 +42,36 @@ public class Summer
         this.SPrice = price;
     }
 }
+
+
+public class Season
+{
+    public string? TimeFrom { get; set; }
+    public string? HourFrom { get; set; }
+    public string? TimeTo { get; set; }
+    public string? HourTo { get; set; }
+
+    public double? HeatDemand { get; set; }
+
+    public double? Price { get; set; }
+
+    public Season() { }
+
+    public Season(string? timeFrom, string? timeTo, double? heatDemand, double? price)
+    {
+        this.TimeFrom = timeFrom;
+        this.TimeTo = timeTo;
+        this.HeatDemand = heatDemand;
+        this.Price = price;
+    }
+    
+    public Season(string? timeFrom, string? hourFrom, string? timeTo, string? hourTo, double? heatDemand, double? price)
+    {
+        this.TimeFrom = timeFrom;
+        this.TimeTo = timeTo;
+        this.HourFrom = hourFrom;
+        this.HourTo = hourTo;
+        this.HeatDemand = heatDemand;
+        this.Price = price;
+    }
+}
