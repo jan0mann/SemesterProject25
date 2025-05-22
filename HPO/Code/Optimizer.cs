@@ -35,33 +35,8 @@ namespace HPO.Optimizer
         }
     }
 
-    public class Optimizer1
-    {
-        public List<Boiler> calculateEfficiency(List<Boiler> boilers)
-        {
-            // Sort boilers by production cost (cheapest first)
-            return boilers.OrderBy(x => x.ProdCostPerMWh).ToList();
-        }
 
-        public hourData OptimizeHour(List<Boiler> boilers, double demand)
-        {
-            var efficiencyBoilers = calculateEfficiency(boilers);
-            double remainingDemand = demand;
-            int i = 0;
-
-            // Schedule boilers to meet heat demand
-            while (remainingDemand > 0 && i < efficiencyBoilers.Count)
-            {
-                remainingDemand -= efficiencyBoilers[i].requestProduction(remainingDemand);
-                i++;
-            }
-
-            return new hourData("", "", demand, efficiencyBoilers);
-        }
-    }
-
-
-    public class Optimizer2
+    public class Optimizer
     {
         public List<Boiler> calculateEfficiency(List<Boiler> boilers, double elprice)
         {
