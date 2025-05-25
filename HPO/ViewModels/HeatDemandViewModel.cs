@@ -380,12 +380,12 @@ public partial class HeatDemandViewModel : ViewModelBase
         }
         if (scenario == 1)
         {
-            boilers = _boilersScenario2;
+            boilers = _boilersScenario1;
             arg = false;
         }
         else
         {
-            boilers = _boilersScenario1;
+            boilers = _boilersScenario2;
             arg = true;
         }
 
@@ -419,11 +419,16 @@ public partial class HeatDemandViewModel : ViewModelBase
             var hoursData = optimizedDataDict[selectedDay];
             Dictionary<string, List<double>> boilersData = new();
 
-            foreach (var boiler in scenarioBoilers)
-            {
-                boilersData[boiler.Name] = new List<double>();
-            }
+            // foreach (var boiler in scenarioBoilers)
+            // {
+            //     boilersData[boiler.Name] = new List<double>();
+            // }
 
+            foreach (var boiler in hoursData[0].Boilers)
+            {
+                boilersData[boiler.Name] = new List<double>();      
+            }
+            
             foreach (var hour in hoursData)
             {
                 foreach (var boiler in hour.Boilers)
