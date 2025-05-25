@@ -57,15 +57,15 @@ public partial class HeatDemandViewModel : ViewModelBase
     [RelayCommand]
     private void SaveScenario1BoilerDistribution()
     {
-        SaveScenario1BoilerDistributionToCsv();
+        SaveScenarioBoilerDistributionToCsvMerged(1);
     }
 
     [RelayCommand]
     private void SaveScenario2BoilerDistribution()
     {
-        SaveScenario2BoilerDistributionToCsv();
+        SaveScenarioBoilerDistributionToCsvMerged(2);
     }
-
+    
     private int _selectedWinterDay;
     public int SelectedWinterDay
     {
@@ -518,28 +518,15 @@ public partial class HeatDemandViewModel : ViewModelBase
     }
     
     //RDM IMPLEMENTATION STARTS HERE
-
-    private void SaveScenario1BoilerDistributionToCsv()
+    private void SaveScenarioBoilerDistributionToCsvMerged(int scenario)
     {
         var fileWriter = new FileWriter();
         string downloadsPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
             "Downloads",
-            "HPOBoilerDistribution_Scenario1.csv"
+            scenario==1 ? "HPOBoilerDistribution_Scenario1.csv" : "HPOBoilerDistribution_Scenario2.csv"
         );
-        var results = GetBoilerHourResultsForScenario(_summerOptimizedData, _winterOptimizedData, "Scenario1");
-        fileWriter.WriteBoilerHourResults(results, downloadsPath);
-    }
-
-    private void SaveScenario2BoilerDistributionToCsv()
-    {
-        var fileWriter = new FileWriter();
-        string downloadsPath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-            "Downloads",
-            "HPOBoilerDistribution_Scenario2.csv"
-        );
-        var results = GetBoilerHourResultsForScenario(_summerOptimizedData2, _winterOptimizedData2, "Scenario2");
+        var results = scenario==1 ? GetBoilerHourResultsForScenario(_summerOptimizedData, _winterOptimizedData, "Scenario1") : GetBoilerHourResultsForScenario(_summerOptimizedData2, _winterOptimizedData2, "Scenario2"); ;
         fileWriter.WriteBoilerHourResults(results, downloadsPath);
     }
 
