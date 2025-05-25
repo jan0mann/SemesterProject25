@@ -69,17 +69,17 @@ public enum BoilerType
 public class Boiler
 {
     public string ConsumptionPerMWhDisplay => ConsumptionPerMWh.ToString("F2");
-    public string Name { get; set; }
-    public double MaxHeat { get; set; }
+    public string Name { get;}
+    public double MaxHeat { get;}
     public double ProdCostPerMWh { get; set; }
-    public double CO2EmissionPerMWh { get; set; }
-    public double ConsumptionPerMWh { get; set; }
-    public double HeatProduced { get; set; } // used only for calculations in optimizer
-    public double CO2Produced { get; set; }
-    public double Consumed { get; set; }
-    public double Cost { get; set; }
-    public double MaxElectricity { get; set; }
-    public double ElecProduced { get; set; }
+    public double CO2EmissionPerMWh { get;}
+    public double ConsumptionPerMWh { get;}
+    public double HeatProduced { get; private set;} // used only for calculations in optimizer
+    public double CO2Produced { get; private set;}
+    public double Consumed { get; private set;}
+    public double Cost { get; private set; }
+    public double MaxElectricity { get; }
+    public double ElecProduced { get; private set; }
     public BoilerType BoilerType { get; private set; }
 
     public double requestProduction(double necessaryHeat)
