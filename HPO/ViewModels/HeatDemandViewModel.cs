@@ -11,6 +11,10 @@ using LiveChartsCore.SkiaSharpView;
 using HPO.Models;
 using HPO.ViewModels;
 using HPO.Optimizer;
+using Avalonia.Controls;
+using Avalonia.Markup.Xaml;
+using LiveChartsCore.SkiaSharpView.Avalonia;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 
 namespace HPO.ViewModels;
 
@@ -53,6 +57,17 @@ public partial class HeatDemandViewModel : ViewModelBase
             }
         }
     }
+
+    [RelayCommand]
+    public void CreateImageFromCartesianControl(int scenario)
+    {
+        var firstView = new HPO.Views.FirstView();
+        firstView.CreateImageFromCartesianControl(scenario);
+        var HeatDemandViewModel = new HeatDemandViewModel();
+        Console.WriteLine(HeatDemandViewModel.CurrentSummerScenario.ToString());// + HeatDemandViewModel._currentSummerScenario.ToString());
+    }
+
+
     //RDM Commands
     [RelayCommand]
     private void SaveScenario1BoilerDistribution()

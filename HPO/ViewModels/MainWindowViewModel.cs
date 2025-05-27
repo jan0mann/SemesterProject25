@@ -5,6 +5,7 @@ using Avalonia;
 using Avalonia.Interactivity;
 using HPO.Views;
 using Avalonia.Controls;
+using System;
 
 namespace HPO.ViewModels;
 
@@ -51,6 +52,7 @@ public partial class MainWindowViewModel : ViewModelBase
         HeatDemandViewModel.CurrentSummerScenario = 1;
         HeatDemandViewModel.CurrentWinterScenario = 1;
         BoilerInfoViewModel.ShowScenario1Command.Execute(null);
+        Console.WriteLine(HeatDemandViewModel.CurrentSummerScenario);
     }
 
     [RelayCommand]
@@ -59,5 +61,6 @@ public partial class MainWindowViewModel : ViewModelBase
         HeatDemandViewModel.CurrentSummerScenario = 2;
         HeatDemandViewModel.CurrentWinterScenario = 2;
         BoilerInfoViewModel.ShowScenario2Command.Execute(null);
+        Console.WriteLine(HeatDemandViewModel.CurrentSummerScenario);
     }
 }
