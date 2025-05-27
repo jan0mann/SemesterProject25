@@ -27,8 +27,10 @@
             <StackPanel Grid.Row="0" Margin="0" HorizontalAlignment="Center">
                 <TextBlock Text="March 2024" Foreground="Black" FontSize="16" Margin="0,0,0,10" HorizontalAlignment="Center"/>
                 <ComboBox Width="200" HorizontalAlignment="Center" ItemsSource="{Binding WinterDays}" SelectedItem="{Binding SelectedWinterDay}"/>
+                
             </StackPanel> 
-            <lvc:CartesianChart Grid.Row="1" Series="{Binding WinterSeries}" YAxes="{Binding HeatDemandYAxes}" XAxes="{Binding XAxes}" Height="600"></lvc:CartesianChart>
+            <lvc:CartesianChart Grid.Row="1" Name="winterMainChart" Series="{Binding WinterSeries}" YAxes="{Binding HeatDemandYAxes}" XAxes="{Binding XAxes}" Height="600"></lvc:CartesianChart>
+          <Button Command="{Binding CreateImageFromCartesianControl}" CommandParameter="{Binding CurrentSummerScenario}">Save This Chart</Button>
           </Grid>
         </TabItem>
 
@@ -39,7 +41,9 @@
               <TextBlock Text="August 2024" Foreground="Black" FontSize="16" Margin="0,0,0,10" HorizontalAlignment="Center"/>
               <ComboBox Width="200" HorizontalAlignment="Center" ItemsSource="{Binding SummerDays}" SelectedItem="{Binding SelectedSummerDay}"/>
             </StackPanel>
-            <lvc:CartesianChart Grid.Row="1" Series="{Binding SummerSeries}" YAxes="{Binding HeatDemandYAxes}" XAxes="{Binding XAxes}" Height="600"></lvc:CartesianChart>
+            <lvc:CartesianChart Grid.Row="1" Name="summerMainChart" Series="{Binding SummerSeries}" YAxes="{Binding HeatDemandYAxes}" XAxes="{Binding XAxes}" Height="600"></lvc:CartesianChart>
+          <Button Command="{Binding CreateImageFromCartesianControl}" CommandParameter="{Binding CurrentSummerScenario}">Save This Chart</Button>
+          <!-- CommandParameter="s" -->
           </Grid>
         </TabItem>
       </TabControl>
