@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace HPO.Models;
 
 public class Winter
@@ -64,7 +66,7 @@ public class Season
         this.HeatDemand = heatDemand;
         this.Price = price;
     }
-    
+
     public Season(string? timeFrom, string? hourFrom, string? timeTo, string? hourTo, double? heatDemand, double? price)
     {
         this.TimeFrom = timeFrom;
@@ -73,5 +75,30 @@ public class Season
         this.HourTo = hourTo;
         this.HeatDemand = heatDemand;
         this.Price = price;
+    }
+}
+
+public static class SeasonExtensions
+{
+    public static List<Season> ConvertToSeason<T>(this List<T> data)
+    {
+        List<Season> converted = new List<Season>();
+        if (typeof(T) == typeof(Winter))
+        {
+            foreach (var hour in data)
+            {
+                var winterHour = hour as Winter;
+                converted.Add(new Season(winterHour.WTimeFrom, winterHour.WHourFrom, winterHour.WTimeTo, winterHour.WHourTo, winterHour.WHeatDemand, winterHour.WPrice));
+            }
+        }
+        else
+        { 
+           foreach (var hour in data)
+            {
+                var winterHour = hour as Summer;
+                converted.Add(new Season(winterHour.STimeFrom, winterHour.SHourFrom, winterHour.STimeTo, winterHour.SHourTo, winterHour.SHeatDemand, winterHour.SPrice));
+            } 
+        }
+        return converted;
     }
 }
