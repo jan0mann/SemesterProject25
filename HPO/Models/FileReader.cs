@@ -27,27 +27,4 @@ public class FileReader
 
 }
 
-public static class SeasonExtensions
-{
-    public static List<Season> ConvertToSeason<T>(this List<T> data)
-    {
-        List<Season> converted = new List<Season>();
-        if (typeof(T) == typeof(Winter))
-        {
-            foreach (var hour in data)
-            {
-                var winterHour = hour as Winter;
-                converted.Add(new Season(winterHour.WTimeFrom, winterHour.WHourFrom, winterHour.WTimeTo, winterHour.WHourTo, winterHour.WHeatDemand, winterHour.WPrice));
-            }
-        }
-        else
-        { 
-           foreach (var hour in data)
-            {
-                var winterHour = hour as Summer;
-                converted.Add(new Season(winterHour.STimeFrom, winterHour.SHourFrom, winterHour.STimeTo, winterHour.SHourTo, winterHour.SHeatDemand, winterHour.SPrice));
-            } 
-        }
-        return converted;
-    }
-}
+
