@@ -14,9 +14,8 @@
       <Border Width="300" Background="#D9D9D9" BorderBrush="Black" DockPanel.Dock="Left">
       <StackPanel HorizontalAlignment="Left">
       <TextBlock Text="Save the Results as a CSV file right now!" Foreground="Black" Padding="10"/>
-      <Button Content="Save Scenario 1 Results" Margin="10" Command="{Binding SaveScenario1BoilerDistributionCommand}" HorizontalAlignment="Center" Background="White"/>
-      <Button Content="Save Scenario 2 Results" Margin="10" Command="{Binding SaveScenario2BoilerDistributionCommand}" HorizontalAlignment="Center" Background="White"/>
-
+      <Button x:Name="SaveButton1" Content="Save Scenario 1 Results" Margin="10" Command="{Binding SaveScenario1BoilerDistributionCommand}" HorizontalAlignment="Center" Background="White" Click="SaveButton_Click"/>
+      <Button x:Name="SaveButton2" Content="Save Scenario 2 Results" Margin="10" Command="{Binding SaveScenario2BoilerDistributionCommand}" HorizontalAlignment="Center" Background="White" Click="SaveButton_Click"/>
       </StackPanel>
       </Border>
 
