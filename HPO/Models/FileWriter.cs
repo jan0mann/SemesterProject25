@@ -42,17 +42,18 @@ public class FileWriter
         }
 }
 
- 
-    
-    public class BoilerHourResult
-    {
-        public int Day { get; set; }
-        public int Hour { get; set; }
-        public string? BoilerName { get; set; }
-        public double HeatProduced { get; set; }
-        public double CO2Produced { get; set; }
-        public double Cost { get; set; }
-        public string? Scenario { get; set; }
-        public double Demand { get; set; }
+
+
+public class BoilerHourResult
+{
+    public int Day { get; set; }
+    public int Hour { get; set; }
+    public string? BoilerName { get; set; }
+    public double HeatProduced { get; set; }
+    public double CO2Produced { get; set; }
+    public double Cost { get; set; }
+    public string? Scenario { get; set; }
+    public double Demand { get; set; }
+    public string? PrimaryEnergy { get; set; }
     }
 

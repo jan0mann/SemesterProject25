@@ -529,6 +529,17 @@ public partial class HeatDemandViewModel : ViewModelBase
         var results = scenario==1 ? GetBoilerHourResultsForScenario(_summerOptimizedData, _winterOptimizedData, "Scenario1") : GetBoilerHourResultsForScenario(_summerOptimizedData2, _winterOptimizedData2, "Scenario2"); ;
         fileWriter.WriteBoilerHourResults(results, downloadsPath);
     }
+    private string GetPrimaryEnergyType(BoilerType type)
+    {
+        return type switch
+        {
+            BoilerType.Oil => "Oil",
+            BoilerType.Gas => "Gas",
+            BoilerType.GasMotor => "Gas",
+            BoilerType.HeatPump => "Electricity",
+            _ => "Unknown"
+        };
+    }
 
 
     private IEnumerable<BoilerHourResult> GetBoilerHourResultsForScenario(
@@ -547,6 +558,26 @@ public partial class HeatDemandViewModel : ViewModelBase
                 {
                     var hourData = hours[hourIndex];
                     double demand = hourData.Demand;
+
+                    // Calculate total heat produced per energy type for this hour
+                    var energySums = new Dictionary<string, double>
+                    {
+                        { "Oil", 0 },
+                        { "Gas", 0 },
+                        { "Electricity", 0 }
+                    };
+
+                    foreach (var boiler in hourData.Boilers)
+                    {
+                        var energyType = GetPrimaryEnergyType(boiler.BoilerType);
+                        if (energySums.ContainsKey(energyType))
+                            energySums[energyType] += boiler.HeatProduced;
+                    }
+
+                    // Find the dominant energy type
+                    var dominantEnergy = energySums.OrderByDescending(kv => kv.Value).First().Key;
+
+                    // Add results for each boiler, but set PrimaryEnergy to dominant
                     foreach (var boiler in hourData.Boilers)
                     {
                         results.Add(new BoilerHourResult
@@ -558,7 +589,8 @@ public partial class HeatDemandViewModel : ViewModelBase
                             CO2Produced = boiler.CO2Produced,
                             Cost = boiler.Cost,
                             Scenario = scenarioName + "_" + period,
-                            Demand = demand
+                            Demand = demand,
+                            PrimaryEnergy = dominantEnergy // <-- set to dominant
                         });
                     }
                 }
@@ -567,6 +599,5 @@ public partial class HeatDemandViewModel : ViewModelBase
         AddData(summerData, "Summer");
         AddData(winterData, "Winter");
         return results;
-    }
-    
+    } 
 }
