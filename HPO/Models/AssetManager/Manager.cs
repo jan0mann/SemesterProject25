@@ -5,7 +5,7 @@ namespace HPO.Models
     public class AssetManager
     {
 
-        public ObservableCollection<Boiler> ShowInfo2()
+        public ObservableCollection<Boiler> ShowBoilerInfo2()
         {
             var Boilers = new ObservableCollection<Boiler>
             {
@@ -17,7 +17,7 @@ namespace HPO.Models
 
             return Boilers;
         }
-        public ObservableCollection<Boiler> ShowInfo1()
+        public ObservableCollection<Boiler> ShowBoilerInfo1()
         {
             var Boilers = new ObservableCollection<Boiler>
             {
