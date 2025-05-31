@@ -15,15 +15,15 @@ namespace Testing
             // Arrange
             var boilers = new List<Boiler>
             {
-                new Boiler("Gas Boiler 1", BoilerType.Gas, 4.0f, 520f, 175f, 0.9f),
-                new Boiler("Gas Boiler 2", BoilerType.Gas, 3.0f, 560f, 130f, 0.7f),
-                new Boiler("Oil Boiler 1", BoilerType.Oil, 4.0f, 670f, 330f, 1.5f)
+                new Boiler("Gas Boiler 1", BoilerType.Gas, 4.0f, 520f, 175f, 0.9f, 0),
+                new Boiler("Gas Boiler 2", BoilerType.Gas, 3.0f, 560f, 130f, 0.7f, 0),
+                new Boiler("Oil Boiler 1", BoilerType.Oil, 4.0f, 670f, 330f, 1.5f, 0)
             };
             double demand = 8.5;
             
             //Act
             var optimizer = new Optimizer();
-            var result = optimizer.OptimizeHour(boilers, demand); 
+            var result = optimizer.OptimizeHour(boilers, demand, 0); 
             
             // Assert
             //Assert.True(result.Boilers[0].MaxHeat >= result.Boilers[1].MaxHeat);
@@ -41,15 +41,15 @@ namespace Testing
             // Arrange
             var boilers = new List<Boiler>
             {
-                new Boiler("Gas Boiler 1", BoilerType.Gas, 4.0f, 520f, 175f, 0.9f),
-                new Boiler("Gas Boiler 2", BoilerType.Gas, 3.0f, 560f, 130f, 0.7f),
-                new Boiler("Oil Boiler 1", BoilerType.Oil, 4.0f, 670f, 330f, 1.5f)
+                new Boiler("Gas Boiler 1", BoilerType.Gas, 4.0f, 520f, 175f, 0.9f, 0),
+                new Boiler("Gas Boiler 2", BoilerType.Gas, 3.0f, 560f, 130f, 0.7f, 0),
+                new Boiler("Oil Boiler 1", BoilerType.Oil, 4.0f, 670f, 330f, 1.5f, 0)
             };
             List<double> co2emissions = new List<double>{700f, 390f, 495f};
             
             //Act
             var optimizer = new Optimizer();
-            var result = optimizer.OptimizeHour(boilers, 8.5); 
+            var result = optimizer.OptimizeHour(boilers, 8.5, 0); 
 
             // production matches demand
             for (int i =0; i< boilers.Count(); i++){
@@ -64,13 +64,13 @@ namespace Testing
 
             var boilers1 = new List<Boiler>
             {
-                new Boiler("Gas Boiler 1", BoilerType.Gas, 4.0f, 520f, 175f, 0.9f),
-                new Boiler("Gas Boiler 2", BoilerType.Gas, 3.0f, 560f, 130f, 0.7f),
-                new Boiler("Oil Boiler 1", BoilerType.Oil, 4.0f, 670f, 330f, 1.5f)
+                new Boiler("Gas Boiler 1", BoilerType.Gas, 4.0f, 520f, 175f, 0.9f, 0),
+                new Boiler("Gas Boiler 2", BoilerType.Gas, 3.0f, 560f, 130f, 0.7f, 0),
+                new Boiler("Oil Boiler 1", BoilerType.Oil, 4.0f, 670f, 330f, 1.5f, 0)
             };
 
 
-            var result1 = optimizer.calculateEfficiency(boilers1);
+            var result1 = optimizer.calculateEfficiency(boilers1, 0);
             //Check if the boilers are sorted by cost
             for (int i = 0; i < result1.Count - 1; i++)
             {

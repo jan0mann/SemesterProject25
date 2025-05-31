@@ -96,7 +96,7 @@ public class Boiler
         CO2Produced = CO2EmissionPerMWh * HeatProduced;
         Consumed = ConsumptionPerMWh * HeatProduced;
         Cost = ProdCostPerMWh * HeatProduced;
-        return MaxHeat;
+        return HeatProduced;
     }
     public void sellElectricity(double elprice)
     {
