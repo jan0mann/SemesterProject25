@@ -30,12 +30,12 @@ namespace HPO.ViewModels
 
         private void ShowScenario1()
         {
-            Boilers = assetManager.ShowInfo1();
+            Boilers = assetManager.ShowBoilerInfo1();
         }
 
         private void ShowScenario2()
         {
-            Boilers = assetManager.ShowInfo2();
+            Boilers = assetManager.ShowBoilerInfo2();
         }
     }
 }
