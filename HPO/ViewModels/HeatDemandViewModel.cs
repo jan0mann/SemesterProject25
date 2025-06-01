@@ -107,7 +107,15 @@ public partial class HeatDemandViewModel : ViewModelBase
         SaveScenarioBoilerDistributionToCsvMerged(2);
     }
 
-
+    public Axis[] EPriceYAxes { get; set; }
+    = new Axis[]
+    {
+        new Axis
+        {
+            Name = "Electricity Price (DKK)",
+            MinLimit = 0,
+        }
+    };
 
     public Axis[] HeatDemandYAxes { get; set; }
         = new Axis[]
@@ -206,4 +214,6 @@ public partial class HeatDemandViewModel : ViewModelBase
             _winterOptimizedData2
         );
     }
+
+
 }
