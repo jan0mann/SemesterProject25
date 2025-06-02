@@ -15,7 +15,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Boilers title and list, higher up -->
+        
         <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,40,0,0">
             <TextBlock Text="Boilers" Foreground="Black" FontWeight="Bold" FontSize="32" Margin="0,0,0,20" HorizontalAlignment="Center"/>
             <ListBox ItemsSource="{Binding Boilers}" Width="800" CornerRadius="10" Background="#ffffff" IsHitTestVisible="False">

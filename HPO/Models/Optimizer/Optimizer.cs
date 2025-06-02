@@ -13,14 +13,12 @@ namespace HPO.Optimizer
         public string Date { get; set; }
         public string Time { get; set; }
         public double Demand { get; set; }
-        //public double ElectricityPrice {get; set;}
         public List<Boiler> Boilers { get; set; }
-        public hourData(string date, string time, double demand,/* double electricityPrice,*/ List<Boiler> boilers)
+        public hourData(string date, string time, double demand, List<Boiler> boilers)
         {
             Date = date;
             Time = time;
             Demand = demand;
-            //ElectricityPrice =electricityPrice;
             Boilers = boilers;
         }
 
@@ -31,7 +29,7 @@ namespace HPO.Optimizer
         public hourData deepcopy()
         {
             var boilers = Boilers.Select(x => x.Deepcopy()).ToList();
-            return new hourData(Date, Time, Demand,/* ElectricityPrice,*/ boilers);
+            return new hourData(Date, Time, Demand,boilers);
         }
     }
 
@@ -40,20 +38,19 @@ namespace HPO.Optimizer
     {
         public List<Boiler> calculateEfficiency(List<Boiler> boilers, double elprice)
         {
-            // Adjust production costs for electricity-consuming/producing units
+        
             foreach (var boiler in boilers)
             {
                 if (boiler.BoilerType == BoilerType.HeatPump)
                 {
-                    boiler.ProdCostPerMWh = elprice + 60; // Heat pump cost depends on electricity price
+                    boiler.ProdCostPerMWh = elprice + 60; 
                 }
                 else if (boiler.BoilerType == BoilerType.GasMotor)
                 {
-                    boiler.ProdCostPerMWh -= elprice; // Gas motor earns from electricity production
+                    boiler.ProdCostPerMWh -= elprice; 
                 }
             }
 
-            // Sort boilers by production cost (cheapest first)
             return boilers.OrderBy(x => x.ProdCostPerMWh).ToList();
         }
 
@@ -63,12 +60,11 @@ namespace HPO.Optimizer
             double remainingDemand = demand;
             int i = 0;
 
-            // Schedule boilers to meet heat demand
+            
             while (remainingDemand > 0 && i < efficiencyBoilers.Count)
             {
                 var boiler = efficiencyBoilers[i];
 
-                // Prioritize the heat pump if it is economical
                 if (boiler.BoilerType == BoilerType.HeatPump && boiler.ProdCostPerMWh <= elprice + 60)
                 {
                     remainingDemand -= boiler.requestProduction(remainingDemand);
@@ -81,7 +77,7 @@ namespace HPO.Optimizer
                 i++;
             }
 
-            // Handle electricity-producing/consuming units
+            
             var gasMotor = efficiencyBoilers.Find(x => x.BoilerType == BoilerType.GasMotor);
             if (gasMotor != null && gasMotor.HeatProduced == 0 && gasMotor.ProdCostPerMWh < elprice)
             {
