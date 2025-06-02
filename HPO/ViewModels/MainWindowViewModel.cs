@@ -44,7 +44,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     public void NavigateToHeatDemand() => CurrentView = _thirdView;
 
-    // SCENARIO COMMANDS
+    
     [RelayCommand]
     public void ShowScenario1()
     {

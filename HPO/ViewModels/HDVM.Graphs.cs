@@ -31,10 +31,6 @@ public partial class HeatDemandViewModel : ViewModelBase
             var hoursData = optimizedDataDict[selectedDay];
             Dictionary<string, List<double>> boilersData = new();
 
-            // foreach (var boiler in scenarioBoilers)
-            // {
-            //     boilersData[boiler.Name] = new List<double>();
-            // }
 
             foreach (var boiler in hoursData[0].Boilers)
             {
@@ -50,7 +46,6 @@ public partial class HeatDemandViewModel : ViewModelBase
             }
 
             var filteredBoilersData = boilersData
-                //.Where(b => b.Value.Any(v => v > 0))
                 .OrderByDescending(b => b.Value.Sum())
                 .ToList();
 
@@ -107,7 +102,6 @@ public partial class HeatDemandViewModel : ViewModelBase
             foreach (var hour in heatDemandData)
             {
                 double demand = hour.Item1;
-                // Example: use the most expensive boiler for this scenario
                 double avgProdCost = scenarioBoilers.Average(b => b.ProdCostPerMWh);
                 double preOptCost = demand * avgProdCost;
                 preOptCostList.Add(Math.Round(preOptCost));
@@ -156,7 +150,7 @@ public partial class HeatDemandViewModel : ViewModelBase
                     LineSmoothness = 0,
                     Stroke = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
                     {
-                        Color = new SkiaSharp.SKColor(255, 0, 255), // Magenta
+                        Color = new SkiaSharp.SKColor(255, 0, 255), 
                         StrokeThickness = 3
                     },
                     Fill = null,
@@ -170,7 +164,7 @@ public partial class HeatDemandViewModel : ViewModelBase
         LineSmoothness = 0,
         Stroke = new LiveChartsCore.SkiaSharpView.Painting.SolidColorPaint
         {
-            Color = new SkiaSharp.SKColor(255, 128, 0), // Orange
+            Color = new SkiaSharp.SKColor(255, 128, 0), 
             StrokeThickness = 3
         },
         Fill = null,

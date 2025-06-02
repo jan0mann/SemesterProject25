@@ -56,7 +56,6 @@ namespace HPO.Models
                         var hourData = hours[hourIndex];
                         double demand = hourData.Demand;
 
-                        // Calculate total heat produced per energy type for this hour
                         var energySums = new Dictionary<string, double>
                         {
                             { "Oil", 0 },
@@ -71,10 +70,8 @@ namespace HPO.Models
                                 energySums[energyType] += boiler.HeatProduced;
                         }
 
-                        // Find the dominant energy type
                         var dominantEnergy = energySums.OrderByDescending(kv => kv.Value).First().Key;
 
-                        // Add results for each boiler, but set PrimaryEnergy to dominant
                         foreach (var boiler in hourData.Boilers)
                         {
                             results.Add(new BoilerHourResult
